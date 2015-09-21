@@ -1,0 +1,7 @@
+/* Configuration of HTML - BODY */
+html, body {
+	background: #FFF url(../images/jpg/bg.jpg);
+	background-repeat: repeat-y;
+	background-position: center;
+	background-size: 100%, 100%;
+}

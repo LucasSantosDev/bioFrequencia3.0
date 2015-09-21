@@ -1,0 +1,252 @@
+@media (min-width: 800px) and (max-width: 979px) {	
+	/* Configuration of Logo */
+	.logo {
+		width: 120px;
+		left: 30px;
+		top: 10px;
+		float: left;
+		position: absolute;
+	}
+	/* Configuration of Menu */
+	.menu {
+		margin-left: 140px;
+		height: 70px;
+		font-size: 13px;
+	}
+	.menu ul {margin-top: 12px;}
+	.menu ul li a:hover {color: orange;}
+	.btn-menu {width: 0px;}
+	.btn-menu img {position: absolute; visibility: hidden;}
+	.menu2 {
+		position: absolute;
+		visibility: hidden;
+		height: 0px;
+	}
+	/* Configuration of Banner */
+	.banner {
+		padding-top: 75px;
+	}
+	/* Configuration of Content */
+	.barra {
+		width: 100%;
+		height: 10px;
+		position: relative;
+		float: left;
+		left: 15px;
+		background: orange url(../images/png/barra.png);
+		background-position: center;
+		background-repeat: repeat-x;
+	}
+	.conteudo-index-central {
+		width: 100%;
+		height: 800px;
+		position: relative;
+		float: left;
+		left: 15px;
+		background: #ededed url(../images/png/bg-conteudo.png);
+		background-repeat: repeat-y;	
+	}
+	.index-text-center {
+		height: 800px;
+		width: 100%;
+		font-family: 'Oswald', sans-serif;
+		text-align: center;
+	}
+	.index-strong {
+		font-size: 18px;
+	}
+	.index-text-paragrafo {
+		line-height: 25px;
+		width: 88%;
+		margin: auto;
+	}
+	.header-h1 {
+		font-size: 25px;
+	}
+	.home-video {
+		width: 90%;
+		height: 500px;
+		margin-top: 40px;
+	}
+	/* Configuration of Footer */
+	.footer {
+		background: #222;
+		position: relative;
+		height: 50px;
+		width: 100%;
+	}
+	.logo-footer {
+		position: absolute;
+		width: 100px;
+		left: 30px;
+		margin-bottom: 0px;
+		margin-top: 6px;
+		float: left;
+	}
+	.footer-whats {
+		 width: 20px; 
+		 height: 20px;
+	}
+	.text-footer {
+		text-align: center;
+		color: #ededed;
+		font-family: "Century Gothic";
+		font-size: 15px;
+		padding-top: 15px;
+	}
+	/* Configuration of Oque.php - Content */
+	.conteudo-oque-central {
+		width: 100%;
+		height: auto;
+		position: relative;
+		float: left;
+		left: 15px;
+		background: #ededed url(../images/png/bg-conteudo.png);
+		background-repeat: repeat-y;	
+		padding-top: 10px;
+		padding-bottom: 90px;
+		font-family: 'Oswald', sans-serif;
+	}
+	.conteudo-oque-central h2 {
+		padding-bottom: 30px;
+	}
+	.oque-row {
+		float: left;
+		position: relative;
+		height: auto;
+		margin: auto;
+		width: 100%;
+		top: 30px;
+	}
+	.oque1, .oque2, .oque3, .oque4, .oque5 {
+		height: auto;
+		width: 100%;
+	}
+	.oque2, .oque3, .oque4, .oque1 {
+		margin-top: 20px;
+	}
+	.simples, .exclusivo, .hospedagem, .manutencao, .personalizado {
+		width: 80%;
+		height: auto;
+		cursor: pointer;
+		margin-bottom: 0px;
+	}
+	.hospedagem {margin-top: 8px;}
+	.manutencao {margin-top: 10px;}
+	#simples-text, #exclusivo-text, #hospedagem-text, #manutencao-text, #personalizado-text {
+		background: #ccc;
+		margin: auto;
+		margin-top: -14px;
+		width: 60%;
+		height: auto;
+		padding: 20px 5px 20px 8px;
+		border-radius: 0px 0px 10px 10px;
+		border: 1px solid #EDEDED;
+		text-align: left;
+		font-family: 'Open Sans Condensed', sans-serif;
+		font-size: 12px;
+	}
+	/* Configuration of Escolha.php - Content */
+	.conteudo-escolha-central {
+		width: 100%;
+		height: auto;
+		position: relative;
+		float: left;
+		left: 15px;
+		background: #ededed url(../images/png/bg-conteudo.png);
+		background-repeat: repeat-y;	
+		padding-top: 80px;
+		text-align: center;
+		font-family: 'Oswald', sans-serif;
+	}
+	.conteudo-escolha-central h2 {
+		padding-bottom: 25px;
+	}
+	.conteudo-escolha-central p {
+		padding-bottom: 25px;
+		width: 93%;
+		margin: auto;
+	}
+	#carousel-example-generic .carousel-inner a img:hover {
+		z-index: 9999;
+		background: orange;
+		opacity: 0.7;
+	}
+	#carousel-example-generic .item a img:hover {
+		z-index: 9999;
+		background: orange;
+		opacity: 0.7;
+	}
+	#carousel-example-generic .carousel-inner a img:active {
+		z-index: 9999;
+		background: orange;
+		opacity: 0.8;
+	}
+	#carousel-example-generic .item a img:active {
+		z-index: 9999;
+		background: orange;
+		opacity: 0.8;
+	}
+	.seta {
+		bottom: 60px;
+		right: -5px;
+		position: absolute;
+	}
+	.btn-escolhi {
+		font-size: 20px;
+		text-transform: uppercase;
+		position: absolute;
+		bottom: 0px;
+		right: 0px;
+		z-index: 999;
+		border-radius: 0px;
+		height: 60px;
+		padding: 10px 10px 10px 10px;
+		float: right;
+	}
+	/* Configuration of Contato.php - Content */
+	.conteudo-contato-central {
+		width: 100%;
+		height: 600px;
+		position: relative;
+		float: left;
+		left: 15px;
+		background: #ededed url(../images/png/bg-conteudo.png);
+		background-repeat: repeat-y;	
+		text-align: center;
+		padding-top: 10px;
+		font-family: 'Oswald', sans-serif;
+	}
+	.form-horizontal {
+		margin-top: 10px;
+	}
+	.form-control {
+		height: 60px;
+		font-size: 20px;
+	}
+	.maxlength {
+		padding-top: 30px;
+		resize: none;
+	}
+	.botao {
+		width: 100%;
+		padding-top: 10px;
+		padding-bottom: 10px;
+		font-size: 30px;
+		border: 0px;
+		background: url(../images/png/btn-enviar.png) no-repeat center;
+		-webkit-transition: background 1s linear, border 1s;
+	    -moz-transition: background 1s linear, border 1s;
+	    -o-transition: background 1s linear, border 1s;
+	    transition: background 1s linear, border 1s;
+	}
+	.botao:hover {
+		/*box-shadow: inset 0 0 0 5px #3071A9;*/
+		background: url(../images/png/btn-enviar-efeito.png) no-repeat center;
+		border: 0px;
+		-webkit-transition: background 1s linear, border 1s;
+	    -moz-transition: background 1s linear, border 1s;
+	    -o-transition: background 1s linear, border 1s;
+	    transition: background 1s linear, border 1s;
+	}
+}
