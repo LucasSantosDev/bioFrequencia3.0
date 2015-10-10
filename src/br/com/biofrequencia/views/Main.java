@@ -1,9 +1,17 @@
 package br.com.biofrequencia.views;
 
+import br.com.biofrequencia.DAO.UsuarioDAO;
+import br.com.biofrequencia.connection.ControleAcessoBanco;
+import br.com.biofrequencia.connection.connection;
+import br.com.biofrequencia.model.Usuario;
 import br.com.biofrequencia.logic.AtualizadorHorario;
+import br.com.biofrequencia.logic.LimparCampos;
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -17,9 +25,18 @@ import javax.swing.plaf.basic.BasicInternalFrameUI;
  */
 public final class Main extends javax.swing.JFrame {
 
+    private UsuarioDAO usuarioBanco = new UsuarioDAO();
+    private Usuario usuarioModel = new Usuario();
+    private Usuario usuarioLogado = new Usuario();
+    private ArrayList<Usuario> usuarioArray = new ArrayList<>();
+    private ControleAcessoBanco controleAcessoBanco = new ControleAcessoBanco();
+    private connection conexaoBanco = new connection();
+    private Connection con;
+    
     /** Creates new form Main */
-    public Main() throws IOException {
+    public Main(Usuario usuario) throws IOException {
         initComponents();
+        usuarioLogado = usuario;
         jLabel1.repaint();
         setLocationRelativeTo(null);
         String path = new File(".").getCanonicalPath();
@@ -45,6 +62,8 @@ public final class Main extends javax.swing.JFrame {
         tiraBordaInternalFrame(ifCurso);
         tiraBordaInternalFrame(ifMateria);
         tiraBordaInternalFrame(ifHorario);
+        
+        verificaNivel(usuarioLogado.getTpCadastro());
     }
 
     /** This method is called from within the constructor to
@@ -367,6 +386,11 @@ public final class Main extends javax.swing.JFrame {
                 btnMenuConfigMouseClicked(evt);
             }
         });
+        btnMenuConfig.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMenuConfigActionPerformed(evt);
+            }
+        });
 
         jButton1.setBackground(new java.awt.Color(255, 255, 255));
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/biofrequencia/imagensNewIcons/menu.png"))); // NOI18N
@@ -509,14 +533,16 @@ public final class Main extends javax.swing.JFrame {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel2Layout.createSequentialGroup()
-                .add(22, 22, 22)
-                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel2)
-                    .add(jLabel3))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .add(jLabel6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 53, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
             .add(jLabel4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 73, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+            .add(jPanel2Layout.createSequentialGroup()
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanel2Layout.createSequentialGroup()
+                        .add(22, 22, 22)
+                        .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                            .add(jLabel2)
+                            .add(jLabel3)))
+                    .add(jLabel6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 53, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         FramesInternos.setPreferredSize(new java.awt.Dimension(850, 563));
@@ -1091,7 +1117,7 @@ public final class Main extends javax.swing.JFrame {
                         .add(rbHorarios, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jButton2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 50, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pCampoPesquisaLayout.linkSize(new java.awt.Component[] {rbAluno, rbCursos, rbMaterias, rbProfessor, rbSecretaria, rbTurmas}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
@@ -1982,7 +2008,7 @@ public final class Main extends javax.swing.JFrame {
             ifAlunoLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, ifAlunoLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(jTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 764, Short.MAX_VALUE))
+                .add(jTabbedPane, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 764, Short.MAX_VALUE))
         );
         ifAlunoLayout.setVerticalGroup(
             ifAlunoLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -2094,7 +2120,6 @@ public final class Main extends javax.swing.JFrame {
                                         .add(tSalaTurma, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 75, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
                                 .add(pCadTurmaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                                     .add(org.jdesktop.layout.GroupLayout.TRAILING, pCadTurmaLayout.createSequentialGroup()
-                                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                                         .add(lAnoTurma)
                                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                                         .add(tfAnoTurma, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 77, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
@@ -2128,7 +2153,6 @@ public final class Main extends javax.swing.JFrame {
                         .add(4, 4, 4)
                         .add(lNomeCursoTurma))
                     .add(cbCursoTurma, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .add(18, 18, 18)
                 .add(pCadTurmaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(pCadTurmaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                         .add(cbModuloTurma, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -2139,7 +2163,6 @@ public final class Main extends javax.swing.JFrame {
                     .add(pCadTurmaLayout.createSequentialGroup()
                         .add(4, 4, 4)
                         .add(lModuloTurma)))
-                .add(18, 18, 18)
                 .add(pCadTurmaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(pCadTurmaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                         .add(tSiglaTurma, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -2173,7 +2196,7 @@ public final class Main extends javax.swing.JFrame {
             .add(ifTurmaLayout.createSequentialGroup()
                 .add(88, 88, 88)
                 .add(pCadTurma, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(145, Short.MAX_VALUE))
+                .addContainerGap(181, Short.MAX_VALUE))
         );
 
         dpTiposDeCadastro.add(ifTurma, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 780, 480));
@@ -2622,7 +2645,7 @@ public final class Main extends javax.swing.JFrame {
 
         FramesInternos.add(ifCadastrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 800, 500));
 
-        ifConfiguracoes.setVisible(false);
+        ifConfiguracoes.setVisible(true);
 
         jConf.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -2678,7 +2701,7 @@ public final class Main extends javax.swing.JFrame {
         }
 
         try {
-            tfRGEditUser.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##.###.###-#-UU")));
+            tfRGEditUser.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##.###.###-#")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
@@ -2695,6 +2718,11 @@ public final class Main extends javax.swing.JFrame {
         btnCancelarEditUser.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 14)); // NOI18N
         btnCancelarEditUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/biofrequencia/imagensNewIcons/cancel.png"))); // NOI18N
         btnCancelarEditUser.setText("Cancelar");
+        btnCancelarEditUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarEditUserActionPerformed(evt);
+            }
+        });
 
         org.jdesktop.layout.GroupLayout pEditUserLayout = new org.jdesktop.layout.GroupLayout(pEditUser);
         pEditUser.setLayout(pEditUserLayout);
@@ -2810,6 +2838,11 @@ public final class Main extends javax.swing.JFrame {
         btnCancelar.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 14)); // NOI18N
         btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/biofrequencia/imagensNewIcons/cancel.png"))); // NOI18N
         btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         btnAlterar.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 14)); // NOI18N
         btnAlterar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/biofrequencia/imagensNewIcons/edit.png"))); // NOI18N
@@ -3120,11 +3153,23 @@ public final class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMenuChamadaManualKeyPressed
 
     private void btnMenuConfigMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMenuConfigMouseClicked
-        escondeInternalFrame();
-        ifConfiguracoes.setVisible(true);
-        resetaCor();
-        Color bColor = Color.decode("333333");
-        btnMenuConfig.setForeground(bColor);
+        if (verificaNivel(usuarioLogado.getTpCadastro())==3){
+            escondeInternalFrame();
+            ifConfiguracoes.setVisible(true);
+            resetaCor();
+            Color bColor = Color.decode("333333");
+            btnMenuConfig.setForeground(bColor);
+            try {
+                mostraDados();
+                desconecta();
+            } catch(Exception e) {
+                System.out.println(e.getMessage());
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Somente Administrador!");
+            btnMenuConfig.setEnabled(false);
+            btnMenuConfig.setForeground(Color.gray);
+        }
     }//GEN-LAST:event_btnMenuConfigMouseClicked
 
     private void btnMenuChamadaManualMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMenuChamadaManualMouseClicked
@@ -3211,28 +3256,73 @@ public final class Main extends javax.swing.JFrame {
                 jtHorario.setValueAt("", c1, c);
             }
         }
-        // TODO add your handling code here:
     }//GEN-LAST:event_btnCancelarHorarioActionPerformed
 
     private void btnEditUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditUserActionPerformed
-        //alterarDados();
+        try {
+            alteraDadosUsuario();
+            desconecta();
+            mostraDados();
+            desconecta();
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
     }//GEN-LAST:event_btnEditUserActionPerformed
 
     private void pfSenhaAtualFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_pfSenhaAtualFocusLost
-        //if (!(new String(pfSenhaAtual.getPassword())).equals(usuarioLogado.getSenha())) {
+        if (!(new String(pfSenhaAtual.getPassword())).equals(usuarioLogado.getSenha())) {
             JOptionPane.showMessageDialog(null, "A senha do usuário atual não corresponde", "Erro", 0);
             pfSenhaAtual.setText("");
             pfSenhaAtual.addFocusListener(null);
-        //}
+        }
     }//GEN-LAST:event_pfSenhaAtualFocusLost
 
     private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
-        //alterarSenha();
+        try {
+            alterarSenha();
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
     }//GEN-LAST:event_btnAlterarActionPerformed
 
     private void btnIniciarChamadaManualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarChamadaManualActionPerformed
         //buscarAlunos();
     }//GEN-LAST:event_btnIniciarChamadaManualActionPerformed
+
+    private void btnMenuConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuConfigActionPerformed
+        if (verificaNivel(usuarioLogado.getTpCadastro())==3){
+            escondeInternalFrame();
+            ifConfiguracoes.setVisible(true);
+            resetaCor();
+            Color bColor = Color.decode("333333");
+            btnMenuConfig.setForeground(bColor);
+            try {
+                mostraDados();
+                desconecta();
+            } catch(Exception e) {
+                System.out.println(e.getMessage());
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Somente Administrador!");
+            btnMenuConfig.setEnabled(false);
+            btnMenuConfig.setForeground(Color.gray);
+        }
+    }//GEN-LAST:event_btnMenuConfigActionPerformed
+
+    private void btnCancelarEditUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarEditUserActionPerformed
+        try {
+            LimparCampos lc = new LimparCampos();
+            lc.limpaCampos(pEditarSenha);
+            mostraDados();
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }//GEN-LAST:event_btnCancelarEditUserActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        LimparCampos lc = new LimparCampos();
+        lc.limpaCampos(pEditarSenha);
+    }//GEN-LAST:event_btnCancelarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -3264,11 +3354,7 @@ public final class Main extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                try {
-                    new Main().setVisible(true);
-                } catch (IOException ex) {
-                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-                }
+//                new Main().setVisible(true);
             }
         });
     }
@@ -3571,5 +3657,59 @@ public final class Main extends javax.swing.JFrame {
         btnMenuLogoff.setForeground(bColor);
         btnMenuSair.setForeground(bColor);
     }
+
+    public void mostraDados() throws SQLException {
+        usuarioArray = usuarioBanco.pesquisa(usuarioLogado, conecta());
+        
+        int cont = 0;
+        
+        while(cont<1) {
+            tNomeEditUser.setText(usuarioArray.get(cont).getNome());
+            tfDataNasEditUser.setText(usuarioArray.get(cont).getDtNasc());
+            tfCPFEditUser.setText(usuarioArray.get(cont).getCPF());
+            tfRGEditUser.setText(usuarioArray.get(cont).getRG());
+            tEmailEditUser.setText(usuarioArray.get(cont).getEmail());
+            tfTelFixoEditUser.setText(usuarioArray.get(cont).getTelFixo());
+            tfTelCelEditUser.setText(usuarioArray.get(cont).getTelCelular());
+            cont++;
+        }        
+    }
     
+    public void alterarSenha() throws SQLException, IOException {
+        usuarioBanco.editaSenha(usuarioLogado, pfSenhaAtual.getText(), pfSenhaNova.getText(), pfSenhaNovaRepetir.getText(), conecta());
+        LimparCampos lc = new LimparCampos();
+        lc.limpaCampos(pEditarSenha);
+        dispose();
+        Login login = new Login();
+        login.setVisible(true);
+    }
+
+    public void alteraDadosUsuario() throws SQLException {
+        usuarioBanco.editaUsuario(new Usuario(0, tNomeEditUser.getText(), tfDataNasEditUser.getText(), tfCPFEditUser.getText(), tfRGEditUser.getText(), tfTelFixoEditUser.getText(), tfTelCelEditUser.getText(), tEmailEditUser.getText(), usuarioLogado.getTpCadastro(), usuarioLogado.isAtivo(), usuarioLogado.getSenha()), conecta(), usuarioLogado.getId());
+        LimparCampos lc = new LimparCampos();
+        lc.limpaCampos(pEditarSenha);
+    }
+    
+    public int verificaNivel(int nivel) {
+        return nivel;
+    }
+    
+    public Connection conecta() {
+        try {
+            con = (Connection) conexaoBanco.con();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return con;
+    }
+    
+    public Connection desconecta() {
+        try {
+            con = null;
+            System.out.println("Desconectado");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return con;
+    }
 }
