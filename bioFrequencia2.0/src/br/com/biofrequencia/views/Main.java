@@ -1,14 +1,33 @@
 package br.com.biofrequencia.views;
 
+import br.com.biofrequencia.DAO.AlunoDAO;
+import br.com.biofrequencia.DAO.CursoDAO;
+import br.com.biofrequencia.DAO.FuncionarioDAO;
+import br.com.biofrequencia.DAO.TurmaDAO;
+import br.com.biofrequencia.DAO.UsuarioDAO;
+import br.com.biofrequencia.connection.ControleAcessoBanco;
+import br.com.biofrequencia.connection.connection;
 import br.com.biofrequencia.logic.AtualizadorHorario;
+import br.com.biofrequencia.logic.LimparCampos;
+import br.com.biofrequencia.logic.ValidarCPF;
+import br.com.biofrequencia.model.Aluno;
+import br.com.biofrequencia.model.Curso;
+import br.com.biofrequencia.model.Funcionario;
+import br.com.biofrequencia.model.RadioButtons;
+import br.com.biofrequencia.model.Turma;
+import br.com.biofrequencia.model.Usuario;
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 
 /**
@@ -17,9 +36,32 @@ import javax.swing.plaf.basic.BasicInternalFrameUI;
  */
 public final class Main extends javax.swing.JFrame {
 
-    /** Creates new form Main */
-    public Main() throws IOException {
+    private UsuarioDAO usuarioBanco = new UsuarioDAO();
+    private CursoDAO cursoBanco = new CursoDAO();
+    private TurmaDAO turmaBanco = new TurmaDAO();
+    private AlunoDAO alunoBanco = new AlunoDAO();
+    private FuncionarioDAO funcionarioBanco = new FuncionarioDAO();
+    private Usuario usuarioModel = new Usuario();
+    private Turma turmaModel = new Turma();
+    private Aluno alunoModel = new Aluno();
+    private Funcionario funcionarioModel = new Funcionario();
+    private Usuario usuarioLogado = new Usuario();
+    private ArrayList<Usuario> usuarioArray = new ArrayList<>();
+    private ArrayList<Funcionario> funcionarioArray = new ArrayList<>();
+    private ArrayList<Curso> cursoArray = new ArrayList<>();
+    private ArrayList<Turma> turmaArray = new ArrayList<>();
+    private ControleAcessoBanco controleAcessoBanco = new ControleAcessoBanco();
+    private connection conexaoBanco = new connection();
+    private Connection con;
+    private Curso cursoModel = new Curso();
+    private RadioButtons rb = new RadioButtons();
+    private ValidarCPF vcpf = new ValidarCPF();
+    
+    /** Creates new form Main
+     * @param usuario */
+    public Main(Usuario usuario) throws IOException {
         initComponents();
+        usuarioLogado = usuario;
         jLabel1.repaint();
         setLocationRelativeTo(null);
         String path = new File(".").getCanonicalPath();
@@ -45,6 +87,8 @@ public final class Main extends javax.swing.JFrame {
         tiraBordaInternalFrame(ifCurso);
         tiraBordaInternalFrame(ifMateria);
         tiraBordaInternalFrame(ifHorario);
+        
+        verificaNivel(usuarioLogado.getTpCadastro());
     }
 
     /** This method is called from within the constructor to
@@ -131,7 +175,7 @@ public final class Main extends javax.swing.JFrame {
         rbHorarios = new javax.swing.JRadioButton();
         tPesquisa = new javax.swing.JTextField();
         cbPesquisa = new javax.swing.JComboBox();
-        jButton2 = new javax.swing.JButton();
+        btnPesquisa = new javax.swing.JButton();
         jtpResultadoPesquisa = new javax.swing.JTabbedPane();
         jpAtivos = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -367,6 +411,11 @@ public final class Main extends javax.swing.JFrame {
                 btnMenuConfigMouseClicked(evt);
             }
         });
+        btnMenuConfig.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMenuConfigActionPerformed(evt);
+            }
+        });
 
         jButton1.setBackground(new java.awt.Color(255, 255, 255));
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/biofrequencia/imagensNewIcons/menu.png"))); // NOI18N
@@ -509,14 +558,16 @@ public final class Main extends javax.swing.JFrame {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel2Layout.createSequentialGroup()
-                .add(22, 22, 22)
-                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel2)
-                    .add(jLabel3))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .add(jLabel6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 53, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
             .add(jLabel4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 73, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+            .add(jPanel2Layout.createSequentialGroup()
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanel2Layout.createSequentialGroup()
+                        .add(22, 22, 22)
+                        .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                            .add(jLabel2)
+                            .add(jLabel3)))
+                    .add(jLabel6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 53, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         FramesInternos.setPreferredSize(new java.awt.Dimension(850, 563));
@@ -1050,19 +1101,28 @@ public final class Main extends javax.swing.JFrame {
             }
         });
 
-        tPesquisa.setEnabled(false);
         tPesquisa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tPesquisaActionPerformed(evt);
             }
         });
+        tPesquisa.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tPesquisaKeyPressed(evt);
+            }
+        });
 
-        cbPesquisa.setEnabled(false);
+        cbPesquisa.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Nome", "RG / RA", "CPF" }));
 
-        jButton2.setBackground(new java.awt.Color(51, 51, 51));
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/biofrequencia/imagensNewIcons/search.png"))); // NOI18N
-        jButton2.setContentAreaFilled(false);
-        jButton2.setEnabled(false);
+        btnPesquisa.setBackground(new java.awt.Color(51, 51, 51));
+        btnPesquisa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/biofrequencia/imagensNewIcons/search.png"))); // NOI18N
+        btnPesquisa.setContentAreaFilled(false);
+        btnPesquisa.setEnabled(false);
+        btnPesquisa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPesquisaActionPerformed(evt);
+            }
+        });
 
         org.jdesktop.layout.GroupLayout pCampoPesquisaLayout = new org.jdesktop.layout.GroupLayout(pCampoPesquisa);
         pCampoPesquisa.setLayout(pCampoPesquisaLayout);
@@ -1090,8 +1150,8 @@ public final class Main extends javax.swing.JFrame {
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(rbHorarios, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jButton2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 50, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .add(btnPesquisa, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 50, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pCampoPesquisaLayout.linkSize(new java.awt.Component[] {rbAluno, rbCursos, rbMaterias, rbProfessor, rbSecretaria, rbTurmas}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
@@ -1102,7 +1162,7 @@ public final class Main extends javax.swing.JFrame {
                 .addContainerGap()
                 .add(pCampoPesquisaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(pCampoPesquisaLayout.createSequentialGroup()
-                        .add(jButton2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 33, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(btnPesquisa, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 33, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                         .add(0, 0, Short.MAX_VALUE))
                     .add(pCampoPesquisaLayout.createSequentialGroup()
                         .add(pCampoPesquisaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1147,11 +1207,11 @@ public final class Main extends javax.swing.JFrame {
         jpAtivos.setLayout(jpAtivosLayout);
         jpAtivosLayout.setHorizontalGroup(
             jpAtivosLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 759, Short.MAX_VALUE)
+            .add(0, 755, Short.MAX_VALUE)
             .add(jpAtivosLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                 .add(jpAtivosLayout.createSequentialGroup()
                     .addContainerGap()
-                    .add(jScrollPane2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 739, Short.MAX_VALUE)
+                    .add(jScrollPane2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 735, Short.MAX_VALUE)
                     .addContainerGap()))
         );
         jpAtivosLayout.setVerticalGroup(
@@ -1186,11 +1246,11 @@ public final class Main extends javax.swing.JFrame {
         jpInativos.setLayout(jpInativosLayout);
         jpInativosLayout.setHorizontalGroup(
             jpInativosLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 759, Short.MAX_VALUE)
+            .add(0, 755, Short.MAX_VALUE)
             .add(jpInativosLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                 .add(jpInativosLayout.createSequentialGroup()
                     .addContainerGap()
-                    .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 739, Short.MAX_VALUE)
+                    .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 735, Short.MAX_VALUE)
                     .addContainerGap()))
         );
         jpInativosLayout.setVerticalGroup(
@@ -1279,6 +1339,11 @@ public final class Main extends javax.swing.JFrame {
                 btnMenuFuncionarioMouseClicked(evt);
             }
         });
+        btnMenuFuncionario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMenuFuncionarioActionPerformed(evt);
+            }
+        });
 
         btnMenuAluno.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 12)); // NOI18N
         btnMenuAluno.setForeground(new java.awt.Color(255, 255, 255));
@@ -1289,6 +1354,11 @@ public final class Main extends javax.swing.JFrame {
         btnMenuAluno.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnMenuAlunoMouseClicked(evt);
+            }
+        });
+        btnMenuAluno.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMenuAlunoActionPerformed(evt);
             }
         });
 
@@ -1387,7 +1457,7 @@ public final class Main extends javax.swing.JFrame {
 
         ldtNasUser.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 12)); // NOI18N
         ldtNasUser.setForeground(new java.awt.Color(51, 51, 51));
-        ldtNasUser.setText("Data de Nascimento:");
+        ldtNasUser.setText("*Data de Nascimento:");
 
         lCPFUser.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 12)); // NOI18N
         lCPFUser.setForeground(new java.awt.Color(51, 51, 51));
@@ -1431,7 +1501,7 @@ public final class Main extends javax.swing.JFrame {
         }
 
         try {
-            tfTelCelUser.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("9-####-####")));
+            tfTelCelUser.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("(##)9####-####")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
@@ -1449,7 +1519,7 @@ public final class Main extends javax.swing.JFrame {
         }
 
         try {
-            tfRGUser.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##.###.###-#-UU")));
+            tfRGUser.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##.###.###-#")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
@@ -1621,10 +1691,10 @@ public final class Main extends javax.swing.JFrame {
         pDadosAluno.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         lNomeAluno.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 12)); // NOI18N
-        lNomeAluno.setText("Nome Completo:");
+        lNomeAluno.setText("*Nome Completo:");
 
         lDtNasAluno.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 12)); // NOI18N
-        lDtNasAluno.setText("Data de Nascimento:");
+        lDtNasAluno.setText("*Data de Nascimento:");
 
         lNumAluno.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 12)); // NOI18N
         lNumAluno.setText("Numero Da Chamada:");
@@ -1633,10 +1703,10 @@ public final class Main extends javax.swing.JFrame {
         lTelAluno.setText("Telefone Fixo:");
 
         lCelAluno.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 12)); // NOI18N
-        lCelAluno.setText("Telefone Celular:");
+        lCelAluno.setText("*Telefone Celular:");
 
         lCidadeAluno.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 12)); // NOI18N
-        lCidadeAluno.setText("Cidade:");
+        lCidadeAluno.setText("*Cidade:");
 
         lEndAluno.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 12)); // NOI18N
         lEndAluno.setText("Endereço:");
@@ -1645,10 +1715,10 @@ public final class Main extends javax.swing.JFrame {
         lCEPAluno.setText("CEP:");
 
         lSexoAluno.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 12)); // NOI18N
-        lSexoAluno.setText("Sexo:");
+        lSexoAluno.setText("*Sexo:");
 
         lNmResAluno1.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 12)); // NOI18N
-        lNmResAluno1.setText("Nome do Responsável 1:");
+        lNmResAluno1.setText("*Nome do Responsável 1:");
 
         lNmResAluno2.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 12)); // NOI18N
         lNmResAluno2.setText("Nome do Responsável 2:");
@@ -1657,6 +1727,11 @@ public final class Main extends javax.swing.JFrame {
 
         cbSexoAluno.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 12)); // NOI18N
         cbSexoAluno.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Masculino", "Feminino" }));
+        cbSexoAluno.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbSexoAlunoActionPerformed(evt);
+            }
+        });
 
         try {
             tfDtNasAluno.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
@@ -1715,10 +1790,11 @@ public final class Main extends javax.swing.JFrame {
         lRAAluno.setText("RA:");
 
         try {
-            tfRAAluno.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##.###.###-#-UU")));
+            tfRAAluno.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##.###.###-#")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
+        tfRAAluno.setText("  .   .   - ");
         tfRAAluno.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 tfRAAlunoFocusLost(evt);
@@ -1752,14 +1828,6 @@ public final class Main extends javax.swing.JFrame {
                     .add(jSeparator4)
                     .add(pDadosAlunoLayout.createSequentialGroup()
                         .add(pDadosAlunoLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
-                            .add(pDadosAlunoLayout.createSequentialGroup()
-                                .add(lNmResAluno2)
-                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                                .add(tRespAluno2))
-                            .add(pDadosAlunoLayout.createSequentialGroup()
-                                .add(lNmResAluno1)
-                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                                .add(tRespAluno1))
                             .add(org.jdesktop.layout.GroupLayout.TRAILING, pDadosAlunoLayout.createSequentialGroup()
                                 .add(lCidadeAluno)
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -1769,8 +1837,7 @@ public final class Main extends javax.swing.JFrame {
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                                 .add(tEndAluno))
                             .add(org.jdesktop.layout.GroupLayout.TRAILING, pDadosAlunoLayout.createSequentialGroup()
-                                .add(0, 0, Short.MAX_VALUE)
-                                .add(pDadosAlunoLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                                .add(pDadosAlunoLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                                     .add(pDadosAlunoLayout.createSequentialGroup()
                                         .add(lDtNasAluno)
                                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -1778,11 +1845,12 @@ public final class Main extends javax.swing.JFrame {
                                     .add(pDadosAlunoLayout.createSequentialGroup()
                                         .add(lTelAluno)
                                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                                        .add(tfTelAluno, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 118, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                                .add(18, 18, 18)
+                                        .add(tfTelAluno, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 118, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                        .add(0, 0, Short.MAX_VALUE)))
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                                 .add(pDadosAlunoLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                                     .add(pDadosAlunoLayout.createSequentialGroup()
-                                        .add(lSexoAluno)
+                                        .add(lSexoAluno, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 42, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                                         .add(cbSexoAluno, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 124, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                                     .add(pDadosAlunoLayout.createSequentialGroup()
@@ -1804,20 +1872,27 @@ public final class Main extends javax.swing.JFrame {
                                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                                         .add(spinnerNumChamadaAluno, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 42, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .add(pDadosAlunoLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
-                                    .add(org.jdesktop.layout.GroupLayout.TRAILING, pDadosAlunoLayout.createSequentialGroup()
+                                .add(pDadosAlunoLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
+                                    .add(pDadosAlunoLayout.createSequentialGroup()
                                         .add(lNomeAluno)
                                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                                         .add(tNomeAluno, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 323, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                                     .add(pDadosAlunoLayout.createSequentialGroup()
                                         .add(lCursoAluno)
                                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                                        .add(cbCursoAluno, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 152, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                        .add(27, 27, 27)
+                                        .add(cbCursoAluno, 0, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                                         .add(lTurmaAluno)
                                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                                        .add(cbTurmaAluno, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 149, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                        .add(4, 4, 4)))))
+                                        .add(cbTurmaAluno, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 135, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
+                            .add(pDadosAlunoLayout.createSequentialGroup()
+                                .add(pDadosAlunoLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                    .add(lNmResAluno1)
+                                    .add(lNmResAluno2))
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                .add(pDadosAlunoLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                    .add(tRespAluno2)
+                                    .add(tRespAluno1))))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(jSeparator3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 13, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -1982,7 +2057,7 @@ public final class Main extends javax.swing.JFrame {
             ifAlunoLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, ifAlunoLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(jTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 764, Short.MAX_VALUE))
+                .add(jTabbedPane, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 764, Short.MAX_VALUE))
         );
         ifAlunoLayout.setVerticalGroup(
             ifAlunoLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -2094,7 +2169,6 @@ public final class Main extends javax.swing.JFrame {
                                         .add(tSalaTurma, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 75, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
                                 .add(pCadTurmaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                                     .add(org.jdesktop.layout.GroupLayout.TRAILING, pCadTurmaLayout.createSequentialGroup()
-                                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                                         .add(lAnoTurma)
                                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                                         .add(tfAnoTurma, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 77, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
@@ -2128,7 +2202,6 @@ public final class Main extends javax.swing.JFrame {
                         .add(4, 4, 4)
                         .add(lNomeCursoTurma))
                     .add(cbCursoTurma, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .add(18, 18, 18)
                 .add(pCadTurmaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(pCadTurmaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                         .add(cbModuloTurma, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -2139,7 +2212,6 @@ public final class Main extends javax.swing.JFrame {
                     .add(pCadTurmaLayout.createSequentialGroup()
                         .add(4, 4, 4)
                         .add(lModuloTurma)))
-                .add(18, 18, 18)
                 .add(pCadTurmaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(pCadTurmaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                         .add(tSiglaTurma, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -2173,7 +2245,7 @@ public final class Main extends javax.swing.JFrame {
             .add(ifTurmaLayout.createSequentialGroup()
                 .add(88, 88, 88)
                 .add(pCadTurma, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(145, Short.MAX_VALUE))
+                .addContainerGap(181, Short.MAX_VALUE))
         );
 
         dpTiposDeCadastro.add(ifTurma, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 780, 480));
@@ -2210,6 +2282,7 @@ public final class Main extends javax.swing.JFrame {
         });
 
         spQtdModCurso.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 12)); // NOI18N
+        spQtdModCurso.setModel(new SpinnerNumberModel(0, 0, 10, 1));
 
         org.jdesktop.layout.GroupLayout pCadCursoLayout = new org.jdesktop.layout.GroupLayout(pCadCurso);
         pCadCurso.setLayout(pCadCursoLayout);
@@ -2622,7 +2695,7 @@ public final class Main extends javax.swing.JFrame {
 
         FramesInternos.add(ifCadastrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 800, 500));
 
-        ifConfiguracoes.setVisible(false);
+        ifConfiguracoes.setVisible(true);
 
         jConf.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -2678,7 +2751,7 @@ public final class Main extends javax.swing.JFrame {
         }
 
         try {
-            tfRGEditUser.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##.###.###-#-UU")));
+            tfRGEditUser.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##.###.###-#")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
@@ -2695,6 +2768,11 @@ public final class Main extends javax.swing.JFrame {
         btnCancelarEditUser.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 14)); // NOI18N
         btnCancelarEditUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/biofrequencia/imagensNewIcons/cancel.png"))); // NOI18N
         btnCancelarEditUser.setText("Cancelar");
+        btnCancelarEditUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarEditUserActionPerformed(evt);
+            }
+        });
 
         org.jdesktop.layout.GroupLayout pEditUserLayout = new org.jdesktop.layout.GroupLayout(pEditUser);
         pEditUser.setLayout(pEditUserLayout);
@@ -2810,6 +2888,11 @@ public final class Main extends javax.swing.JFrame {
         btnCancelar.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 14)); // NOI18N
         btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/biofrequencia/imagensNewIcons/cancel.png"))); // NOI18N
         btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         btnAlterar.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 14)); // NOI18N
         btnAlterar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/biofrequencia/imagensNewIcons/edit.png"))); // NOI18N
@@ -2951,6 +3034,9 @@ public final class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1MouseClicked
 
     private void btnMenuPesquisarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMenuPesquisarMouseClicked
+        //jtResultadoAtivo.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        //jtResultadoInativos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        limparPesquisa();
         escondeInternalFrame();
         ifPesquisar.setVisible(true);
         resetaCor();
@@ -2959,35 +3045,79 @@ public final class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMenuPesquisarMouseClicked
 
     private void rbProfessorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbProfessorActionPerformed
-        //pesquisarProfessor();
+        if(rbSecretaria.isSelected() || rbAluno.isSelected() || rbMaterias.isSelected() || rbTurmas.isSelected() || rbCursos.isSelected() || rbHorarios.isSelected()) {
+            rbProfessor.setSelected(false);
+        }
+        escolheRadioButtons();
+        if((tPesquisa.getText().length() > 0)) {
+            btnPesquisa.setEnabled(true);
+        }
     }//GEN-LAST:event_rbProfessorActionPerformed
 
     private void rbAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbAlunoActionPerformed
-        //pesquisarAluno();
+        if(rbSecretaria.isSelected() || rbProfessor.isSelected() || rbMaterias.isSelected() || rbTurmas.isSelected() || rbCursos.isSelected() || rbHorarios.isSelected()) {
+            rbAluno.setSelected(false);
+        }
+        escolheRadioButtons();
+        if((tPesquisa.getText().length() > 0)) {
+            btnPesquisa.setEnabled(true);
+        }
     }//GEN-LAST:event_rbAlunoActionPerformed
 
     private void rbSecretariaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbSecretariaActionPerformed
-        //pesquisarSecretaria();
+        if(rbProfessor.isSelected() || rbAluno.isSelected() || rbMaterias.isSelected() || rbTurmas.isSelected() || rbCursos.isSelected() || rbHorarios.isSelected()) {
+            rbSecretaria.setSelected(false);
+        }
+        escolheRadioButtons();
+        if((tPesquisa.getText().length() > 0)) {
+            btnPesquisa.setEnabled(true);
+        }
     }//GEN-LAST:event_rbSecretariaActionPerformed
 
     private void rbMateriasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbMateriasActionPerformed
-        //pesquisarMaterias();
+        if(rbSecretaria.isSelected() || rbAluno.isSelected() || rbProfessor.isSelected() || rbTurmas.isSelected() || rbCursos.isSelected() || rbHorarios.isSelected()) {
+            rbMaterias.setSelected(false);
+        }
+        escolheRadioButtons();
+        if((tPesquisa.getText().length() > 0)) {
+            btnPesquisa.setEnabled(true);
+        }
     }//GEN-LAST:event_rbMateriasActionPerformed
 
     private void rbTurmasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbTurmasActionPerformed
-        //pesquisarTurmas();
+        if(rbSecretaria.isSelected() || rbAluno.isSelected() || rbMaterias.isSelected() || rbProfessor.isSelected() || rbCursos.isSelected() || rbHorarios.isSelected()) {
+            rbTurmas.setSelected(false);
+        }
+        escolheRadioButtons();
+        if((tPesquisa.getText().length() > 0)) {
+            btnPesquisa.setEnabled(true);
+        }
     }//GEN-LAST:event_rbTurmasActionPerformed
 
     private void rbCursosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbCursosActionPerformed
-        //pesquisarCurso();
+        if(rbSecretaria.isSelected() || rbAluno.isSelected() || rbMaterias.isSelected() || rbTurmas.isSelected() || rbProfessor.isSelected() || rbHorarios.isSelected()) {
+            rbCursos.setSelected(false);
+        }
+        escolheRadioButtons();
+        if((tPesquisa.getText().length() > 0)) {
+            btnPesquisa.setEnabled(true);
+        }
     }//GEN-LAST:event_rbCursosActionPerformed
 
     private void rbHorariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbHorariosActionPerformed
-        //pesquisarHorario();
+        if(rbSecretaria.isSelected() || rbAluno.isSelected() || rbMaterias.isSelected() || rbTurmas.isSelected() || rbCursos.isSelected() || rbProfessor.isSelected()) {
+            rbHorarios.setSelected(false);
+        }
+        escolheRadioButtons();
+        if((tPesquisa.getText().length() > 0)) {
+            btnPesquisa.setEnabled(true);
+        }
     }//GEN-LAST:event_rbHorariosActionPerformed
 
     private void tPesquisaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tPesquisaActionPerformed
-        
+        if((tPesquisa.getText().length() > 0) && (rbProfessor.isSelected() || rbSecretaria.isSelected() || rbAluno.isSelected() || rbMaterias.isSelected() || rbTurmas.isSelected() || rbCursos.isSelected() || rbHorarios.isSelected())) {
+            btnPesquisa.setEnabled(true);
+        }
     }//GEN-LAST:event_tPesquisaActionPerformed
 
     private void jtResultadoAtivoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtResultadoAtivoKeyPressed
@@ -3050,11 +3180,17 @@ public final class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMenuFuncionarioMouseClicked
 
     private void btnCadastrarUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarUserActionPerformed
-        //criarUsuario();
+        try {
+            criarUsuario();
+            desconecta();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
     }//GEN-LAST:event_btnCadastrarUserActionPerformed
 
     private void btnCancelarUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarUserActionPerformed
-        //limparUser();
+        LimparCampos lc = new LimparCampos();
+        lc.limpaCampos(pCadastroUser);
     }//GEN-LAST:event_btnCancelarUserActionPerformed
 
     private void btnMenuCursoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMenuCursoMouseClicked
@@ -3120,11 +3256,23 @@ public final class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMenuChamadaManualKeyPressed
 
     private void btnMenuConfigMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMenuConfigMouseClicked
-        escondeInternalFrame();
-        ifConfiguracoes.setVisible(true);
-        resetaCor();
-        Color bColor = Color.decode("333333");
-        btnMenuConfig.setForeground(bColor);
+        if (verificaNivel(usuarioLogado.getTpCadastro())==3){
+            escondeInternalFrame();
+            ifConfiguracoes.setVisible(true);
+            resetaCor();
+            Color bColor = Color.decode("333333");
+            btnMenuConfig.setForeground(bColor);
+            try {
+                mostraDados();
+                desconecta();
+            } catch(Exception e) {
+                System.out.println(e.getMessage());
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Somente Administrador!");
+            btnMenuConfig.setEnabled(false);
+            btnMenuConfig.setForeground(Color.gray);
+        }
     }//GEN-LAST:event_btnMenuConfigMouseClicked
 
     private void btnMenuChamadaManualMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMenuChamadaManualMouseClicked
@@ -3143,12 +3291,13 @@ public final class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAddDigitalAlunoActionPerformed
 
     private void btnCadastrarAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarAlunoActionPerformed
-        //criarAluno();
-        // TODO add your handling code here:
+        criarAluno();
+        desconecta();
     }//GEN-LAST:event_btnCadastrarAlunoActionPerformed
 
     private void btnLimparAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparAlunoActionPerformed
-        //limparAluno();
+        LimparCampos lc = new LimparCampos();
+        lc.limpaCampos(pDadosAluno);
     }//GEN-LAST:event_btnLimparAlunoActionPerformed
 
     private void tfRAAlunoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfRAAlunoFocusLost
@@ -3172,11 +3321,13 @@ public final class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLimparTurmaActionPerformed
 
     private void btnCadCursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadCursoActionPerformed
-        //criarCurso();
+        criarCurso();
+        desconecta();
     }//GEN-LAST:event_btnCadCursoActionPerformed
 
     private void btnLimparCursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparCursoActionPerformed
-        //limparCurso();
+        LimparCampos lc = new LimparCampos();
+        lc.limpaCampos(pCadCurso);
     }//GEN-LAST:event_btnLimparCursoActionPerformed
 
     private void btnCadastrarMateriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarMateriaActionPerformed
@@ -3211,28 +3362,111 @@ public final class Main extends javax.swing.JFrame {
                 jtHorario.setValueAt("", c1, c);
             }
         }
-        // TODO add your handling code here:
     }//GEN-LAST:event_btnCancelarHorarioActionPerformed
 
     private void btnEditUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditUserActionPerformed
-        //alterarDados();
+        try {
+            alteraDadosUsuario();
+            desconecta();
+            mostraDados();
+            desconecta();
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
     }//GEN-LAST:event_btnEditUserActionPerformed
 
     private void pfSenhaAtualFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_pfSenhaAtualFocusLost
-        //if (!(new String(pfSenhaAtual.getPassword())).equals(usuarioLogado.getSenha())) {
+        if (!(new String(pfSenhaAtual.getPassword())).equals(usuarioLogado.getSenha())) {
             JOptionPane.showMessageDialog(null, "A senha do usuário atual não corresponde", "Erro", 0);
             pfSenhaAtual.setText("");
             pfSenhaAtual.addFocusListener(null);
-        //}
+        }
     }//GEN-LAST:event_pfSenhaAtualFocusLost
 
     private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
-        //alterarSenha();
+        try {
+            alterarSenha();
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
     }//GEN-LAST:event_btnAlterarActionPerformed
 
     private void btnIniciarChamadaManualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarChamadaManualActionPerformed
         //buscarAlunos();
     }//GEN-LAST:event_btnIniciarChamadaManualActionPerformed
+
+    private void btnMenuConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuConfigActionPerformed
+        if (verificaNivel(usuarioLogado.getTpCadastro())==3){
+            escondeInternalFrame();
+            ifConfiguracoes.setVisible(true);
+            resetaCor();
+            Color bColor = Color.decode("333333");
+            btnMenuConfig.setForeground(bColor);
+            try {
+                mostraDados();
+                desconecta();
+            } catch(Exception e) {
+                System.out.println(e.getMessage());
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Somente Administrador!");
+            btnMenuConfig.setEnabled(false);
+            btnMenuConfig.setForeground(Color.gray);
+        }
+    }//GEN-LAST:event_btnMenuConfigActionPerformed
+
+    private void btnCancelarEditUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarEditUserActionPerformed
+        try {
+            LimparCampos lc = new LimparCampos();
+            lc.limpaCampos(pEditarSenha);
+            mostraDados();
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }//GEN-LAST:event_btnCancelarEditUserActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        LimparCampos lc = new LimparCampos();
+        lc.limpaCampos(pEditarSenha);
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void tPesquisaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tPesquisaKeyPressed
+        if((tPesquisa.getText().length() > 0) && (rbProfessor.isSelected() || rbSecretaria.isSelected() || rbAluno.isSelected() || rbMaterias.isSelected() || rbTurmas.isSelected() || rbCursos.isSelected() || rbHorarios.isSelected())) {
+            btnPesquisa.setEnabled(true);
+        }
+    }//GEN-LAST:event_tPesquisaKeyPressed
+
+    private void btnPesquisaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisaActionPerformed
+        String quem = "";
+        if(rb.getProfessor()==1){quem="professor";}
+        else if(rb.getSecretaria()==1){quem="secretaria";}
+        else if(rb.getAluno()==1){quem="aluno";}
+        else if(rb.getMaterias()==1){quem="materias";}
+        else if(rb.getCursos()==1){quem="cursos";}
+        else if(rb.getTurmas()==1){quem="turmas";}
+        else if(rb.getHorarios()==1){quem="horarios";}
+        try {
+            pesquisa(cbPesquisa.getModel().getSelectedItem().toString(), tPesquisa.getText(), quem);
+            desconecta();
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }//GEN-LAST:event_btnPesquisaActionPerformed
+
+    private void cbSexoAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbSexoAlunoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbSexoAlunoActionPerformed
+
+    private void btnMenuAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuAlunoActionPerformed
+        alimentaCbCurso();
+        alimentaCbTurma();
+        desconecta();
+    }//GEN-LAST:event_btnMenuAlunoActionPerformed
+
+    private void btnMenuFuncionarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuFuncionarioActionPerformed
+        LimparCampos lc = new LimparCampos();
+        lc.limpaCampos(pCadastroUser);
+    }//GEN-LAST:event_btnMenuFuncionarioActionPerformed
 
     /**
      * @param args the command line arguments
@@ -3264,11 +3498,7 @@ public final class Main extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                try {
-                    new Main().setVisible(true);
-                } catch (IOException ex) {
-                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-                }
+//                new Main().setVisible(true);
             }
         });
     }
@@ -3309,6 +3539,7 @@ public final class Main extends javax.swing.JFrame {
     private javax.swing.JButton btnMenuPesquisar;
     private javax.swing.JButton btnMenuSair;
     private javax.swing.JButton btnMenuTurma;
+    private javax.swing.JButton btnPesquisa;
     private javax.swing.JButton btnResetSenha;
     private javax.swing.JButton btnSalvarHorario;
     private javax.swing.JButton btnVariosPesquisa;
@@ -3342,7 +3573,6 @@ public final class Main extends javax.swing.JFrame {
     private javax.swing.JInternalFrame ifPesquisar;
     private javax.swing.JInternalFrame ifTurma;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private com.toedter.calendar.JCalendar jCalendar1;
     private javax.swing.JPanel jConf;
     private javax.swing.JLabel jLabel1;
@@ -3533,11 +3763,12 @@ public final class Main extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField tfTelFixoUser;
     // End of variables declaration//GEN-END:variables
 
-    public void tiraBordaInternalFrame(JInternalFrame janela) {
+    private void tiraBordaInternalFrame(JInternalFrame janela) {
     ((BasicInternalFrameUI)janela.getUI()).setNorthPane(null); //retirar o painel superior  
     janela.setBorder(null);//retirar bordas  
     }
-    public void escondeInternalFrame() {
+    
+    private void escondeInternalFrame() {
         ifHome.setVisible(false);
         ifPesquisar.setVisible(false);
         ifCadastrar.setVisible(false);
@@ -3554,7 +3785,7 @@ public final class Main extends javax.swing.JFrame {
         
     }  
     
-    public void resetaCor() {
+    private void resetaCor() {
         Color bColor = Color.decode("0xFFFFFF");
         btnMenuFuncionario.setForeground(bColor);
         btnMenuAluno.setForeground(bColor);
@@ -3571,5 +3802,277 @@ public final class Main extends javax.swing.JFrame {
         btnMenuLogoff.setForeground(bColor);
         btnMenuSair.setForeground(bColor);
     }
+
+    private void mostraDados() throws SQLException {
+        usuarioArray = usuarioBanco.pesquisa(usuarioLogado, conecta());
+        
+        int cont = 0;
+        
+        while(cont<1) {
+            tNomeEditUser.setText(usuarioArray.get(cont).getNome());
+            tfDataNasEditUser.setText(usuarioArray.get(cont).getDtNasc());
+            tfCPFEditUser.setText(usuarioArray.get(cont).getCPF());
+            tfRGEditUser.setText(usuarioArray.get(cont).getRG());
+            tEmailEditUser.setText(usuarioArray.get(cont).getEmail());
+            tfTelFixoEditUser.setText(usuarioArray.get(cont).getTelFixo());
+            tfTelCelEditUser.setText(usuarioArray.get(cont).getTelCelular());
+            cont++;
+        }        
+    }
     
+    public void alterarSenha() throws SQLException, IOException {
+        usuarioBanco.editaSenha(usuarioLogado, pfSenhaAtual.getText(), pfSenhaNova.getText(), pfSenhaNovaRepetir.getText(), conecta());
+        LimparCampos lc = new LimparCampos();
+        lc.limpaCampos(pEditarSenha);
+        dispose();
+        Login login = new Login();
+        login.setVisible(true);
+    }
+
+    private void alteraDadosUsuario() throws SQLException {
+        usuarioBanco.editaUsuario(new Usuario(0, tNomeEditUser.getText(), tfDataNasEditUser.getText(), tfCPFEditUser.getText(), tfRGEditUser.getText(), tfTelFixoEditUser.getText(), tfTelCelEditUser.getText(), tEmailEditUser.getText(), usuarioLogado.getTpCadastro(), usuarioLogado.isAtivo(), usuarioLogado.getSenha()), conecta(), usuarioLogado.getId());
+        LimparCampos lc = new LimparCampos();
+        lc.limpaCampos(pEditarSenha);
+    }
+    
+    public int verificaNivel(int nivel) {
+        return nivel;
+    }
+    
+    private Connection conecta() {
+        try {
+            con = (Connection) conexaoBanco.con();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return con;
+    }
+    
+    private Connection desconecta() {
+        try {
+            con = null;
+            System.out.println("Desconectado");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return con;
+    }
+    
+    private void criarCurso() {
+        if (!tNomeCurso.getText().equals("")) {
+            cursoModel = new Curso(0, tNomeCurso.getText(), Integer.parseInt(spQtdModCurso.getValue().toString()), true);
+            cursoBanco.cadastrarCurso(conecta(), cursoModel);
+            LimparCampos lc = new LimparCampos();
+            lc.limpaCampos(pCadCurso);
+        } else {
+            JOptionPane.showMessageDialog(null, "Preencha os campos corretamente!", "Erro", 0);
+        }
+    }
+    
+    private void limparPesquisa() {
+        //bgPesquisa.clearSelection();
+        btnResetSenha.setEnabled(false);
+        btnVerDetalhesPesquisa.setEnabled(false);
+        jtpResultadoPesquisa.setEnabled(false);
+        btnPesquisa.setEnabled(false);
+        tPesquisa.setEnabled(true);
+        cbPesquisa.setEnabled(true);
+        tPesquisa.setText("");
+        //jtResultadoAtivo.setModel(new javax.swing.table.DefaultTableModel(new Object[0][0], new String[]{}));
+        //jtResultadoInativos.setModel(new javax.swing.table.DefaultTableModel(new Object[0][0], new String[]{}));
+        //DefaultComboBoxModel pesq = new DefaultComboBoxModel(new String[]{});
+        cbPesquisa.setSelectedIndex(0);
+        rbProfessor.setSelected(false);
+        rbSecretaria.setSelected(false);
+        rbAluno.setSelected(false);
+        rbTurmas.setSelected(false);
+        rbCursos.setSelected(false);
+        rbMaterias.setSelected(false);
+        rbHorarios.setSelected(false);
+        btnVariosPesquisa.setEnabled(false);
+        String path = null;
+        try {
+            path = new File(".").getCanonicalPath();
+        } catch (IOException ex) {
+            System.out.println("Erro:"+ex.getMessage());
+        }
+        String nf = path.replace("dist", "");
+        String arq = nf + "\\src\\br\\com\\biofrequencia\\imagensNewIcons\\";
+        btnVariosPesquisa.setIcon(new javax.swing.ImageIcon(arq+"eye-close.png"));
+    }
+
+    private void pesquisa(String tpPesquisa, String text, String quem) throws SQLException {
+        String sql = "";
+        // TIPOS DE PESQUISA QUE PODEM SER LETRAS OU NUMEROS DE 'RG' e 'CPF'
+        if(quem.equals("professor") || quem.equals("secretaria") || quem.equals("aluno")) {
+            if(quem.equals("professor") || quem.equals("secretaria")) {
+                if(tpPesquisa.equals("CPF")) {sql = "SELECT * FROM benutzer WHERE CPF LIKE %"+text+"% AND ativo = true";}
+                if(tpPesquisa.equals("RG / RA")) {sql = "SELECT * FROM benutzer WHERE RG LIKE %"+text+"% AND ativo = true";}
+                if(tpPesquisa.equals("Nome")) {sql = "SELECT * FROM benutzer WHERE UPPER(nome) LIKE '%' || UPPER('"+text+"') || '%' AND ativo = true";}
+                usuarioBanco.pesquisaFuncionario(sql, conecta());
+                JOptionPane.showMessageDialog(null, usuarioModel.getNome());
+            } else if (quem.equals("aluno")) {
+                if(tpPesquisa.equals("CPF")) {sql = "SELECT * FROM schuler WHERE CPF LIKE %"+text+"% AND ativo = true";}
+                if(tpPesquisa.equals("RG / RA")) {sql = "SELECT * FROM schuler WHERE RG LIKE %"+text+"% AND ativo = true";}
+                if(tpPesquisa.equals("Nome")) {sql = "SELECT * FROM schuler WHERE UPPER(nome) LIKE '%' || UPPER('"+text+"') || '%' AND ativo = true";}
+                alunoBanco.pesquisaAluno(sql, conecta());
+            }
+        } //else if()
+    }
+
+    private void escolheRadioButtons() {
+        if((rbProfessor.isSelected())) {
+            rb.setProfessor(1);
+            rb.setSecretaria(0);
+            rb.setAluno(0);
+            rb.setMaterias(0);
+            rb.setTurmas(0);
+            rb.setCursos(0);
+            rb.setHorarios(0);
+        }
+        else if((rbSecretaria.isSelected())) {
+            rb.setProfessor(0);
+            rb.setSecretaria(1);
+            rb.setAluno(0);
+            rb.setMaterias(0);
+            rb.setTurmas(0);
+            rb.setCursos(0);
+            rb.setHorarios(0);
+        }
+        else if((rbAluno.isSelected())) {
+            rb.setProfessor(0);
+            rb.setSecretaria(0);
+            rb.setAluno(1);
+            rb.setMaterias(0);
+            rb.setTurmas(0);
+            rb.setCursos(0);
+            rb.setHorarios(0);
+        }
+        else if((rbMaterias.isSelected())) {
+            rb.setProfessor(0);
+            rb.setSecretaria(0);
+            rb.setAluno(0);
+            rb.setMaterias(1);
+            rb.setTurmas(0);
+            rb.setCursos(0);
+            rb.setHorarios(0);
+        }
+        else if((rbTurmas.isSelected())) {
+            rb.setProfessor(0);
+            rb.setSecretaria(0);
+            rb.setAluno(0);
+            rb.setMaterias(0);
+            rb.setTurmas(1);
+            rb.setCursos(0);
+            rb.setHorarios(0);
+        }
+        else if((rbCursos.isSelected())) {
+            rb.setProfessor(0);
+            rb.setSecretaria(0);
+            rb.setAluno(0);
+            rb.setMaterias(0);
+            rb.setTurmas(0);
+            rb.setCursos(1);
+            rb.setHorarios(0);
+        }
+        else if((rbHorarios.isSelected())) {
+            rb.setProfessor(0);
+            rb.setSecretaria(0);
+            rb.setAluno(0);
+            rb.setMaterias(0);
+            rb.setTurmas(0);
+            rb.setCursos(0);
+            rb.setHorarios(1);
+        }
+    }
+
+    public void criarAluno() {
+         if (!tNomeAluno.getText().equals("") && !tfDtNasAluno.getText().equals("") && !cbSexoAluno.getSelectedItem().equals(0) && !tfCelularAluno.equals("") && !tCidadeAluno.getText().equals("") && !tRespAluno1.getText().equals("")) {
+            int cont = 0;
+            int sexo = 0;
+            int curso = 0;
+            int turma = 0;
+
+            if(cbSexoAluno.getSelectedItem().toString().equals("Masculino")) {sexo = 2;} else {sexo = 1;}
+            //VERIFICANDO CURSO
+            try {
+                while(cont < cursoArray.size()) {
+                    System.out.println(cbCursoAluno.getSelectedItem());
+                    if(cbCursoAluno.getSelectedItem().equals(cursoArray.get(cont).getNomeCurso())) {
+                        curso = cursoArray.get(cont).getId();
+                    } else {curso = 0;}
+                    cont++;
+                }
+            } catch(Exception e) {
+                System.out.println(e.getMessage());
+            }
+            
+            cont = 0;
+            //VERIFICANDO TURMA
+            try {
+                while(cont < turmaArray.size()) {
+                    if(cbTurmaAluno.getSelectedItem().equals(turmaArray.get(cont).getSigla())) {
+                        turma = turmaArray.get(cont).getId();
+                    } else {turma = 0;}
+                    cont++;
+                }
+                System.out.println(turma);
+            } catch(Exception e) {
+                System.out.println(e.getMessage());
+            }
+            alunoModel = new Aluno(0, tNomeAluno.getText(), tfDtNasAluno.getText().replace("/", ""), tfRAAluno.getText().replace(".", "").replace("-", ""), tfTelAluno.getText().replace("(", "").replace(")", "").replace("-", ""), tfCelularAluno.getText().replace("(", "").replace(")", "").replace("-", ""), tfCEPAluno.getText().replace("-", ""), tCidadeAluno.getText(), tEndAluno.getText(), tRespAluno1.getText(), tRespAluno2.getText(), spinnerNumChamadaAluno.getValue().toString(), curso, turma, true, sexo);
+            alunoBanco.cadastrar(conecta(), alunoModel);
+            LimparCampos lc = new LimparCampos();
+            lc.limpaCampos(pDadosAluno);
+        } else {
+            JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatórios!", "Erro", 0);
+        }
+                    
+    }
+
+    public void alimentaCbCurso() {
+        cursoArray = cursoBanco.pesquisar("SELECT * FROM kurs", conecta());
+        
+        int cont = 0;
+        
+        while(cont < cursoArray.size()) {
+            cbCursoAluno.addItem(cursoArray.get(cont).getNomeCurso());
+            cont++;
+        }        
+    }
+
+    public void alimentaCbTurma() {
+        turmaArray = turmaBanco.pesquisar("SELECT * FROM bande", conecta());
+        
+        int cont = 0;
+        
+        while(cont < turmaArray.size()) {
+            cbTurmaAluno.addItem(turmaArray.get(cont).getSigla());
+            cont++;
+        }
+    }
+    
+    public void criarUsuario() throws SQLException {
+        int tpCadastro = 0;
+        
+        if(!tNomeUser.getText().equals("") && !tfCPFUser.getText().equals("") && !tfDataNasUser.getText().equals("") && (jRadioButtonProfessor.isSelected() || jRadioButtonSecretaria.isSelected())) {
+            if(vcpf.CPF(tfCPFUser.getText().replace(".", "").replace("-", "")) == true) {
+                System.out.println("Passou pelo teste do CPF");
+                
+                if(jRadioButtonProfessor.isSelected()) {tpCadastro = 1;} else if(jRadioButtonSecretaria.isSelected()) {tpCadastro = 2;}
+                
+                funcionarioModel = new Funcionario(0, tNomeUser.getText(), tfDataNasUser.getText().replace("/", ""), tfCPFUser.getText().replace(".", "").replace("-", ""), tfRGUser.getText().replace(".", "").replace("-", ""), tfTelFixoUser.getText().replace("(", "").replace(")", "").replace("-", ""), tfTelCelUser.getText().replace("(", "").replace(")", "").replace("-", ""), tEmailUser.getText(), tpCadastro, true, "123456");
+                funcionarioBanco.cadastrar(funcionarioModel, conecta());
+                
+                LimparCampos lc = new LimparCampos();
+                lc.limpaCampos(pCadastroUser);
+            } else {
+                JOptionPane.showMessageDialog(null, "CPF inválido!", "Status do Cadastro", 0);
+                tfCPFUser.setText("");
+            }
+        } else {JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatórios!", "Status do Cadastro", 0);}
+    }
 }
+
+
+

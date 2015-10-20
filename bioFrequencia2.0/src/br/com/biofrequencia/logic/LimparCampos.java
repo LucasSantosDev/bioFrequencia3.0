@@ -15,6 +15,7 @@ public class LimparCampos {
         javax.swing.JFormattedTextField txtFField = null;
         javax.swing.JTextField txtField2 = null;
         javax.swing.JPasswordField pssField  = null;
+        javax.swing.JSpinner spinner  = null;
         // percorrendo todos os campos que existem no painel
         for (int i = 0; i < components.length; i++) {
             // se o componente na posição '[i]' for uma instancia de JTextField
@@ -35,6 +36,11 @@ public class LimparCampos {
                 pssField = (javax.swing.JPasswordField) components[i];
                 // limpa o campo
                 pssField.setText("");
+            }
+            else if (components[i] instanceof javax.swing.JSpinner) {
+                spinner = (javax.swing.JSpinner) components[i];
+                // limpa o campo
+                spinner.setValue(0);
             }
         }
     }

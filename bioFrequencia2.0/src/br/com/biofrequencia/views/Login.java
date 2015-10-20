@@ -1,14 +1,18 @@
 package br.com.biofrequencia.views;
 
+import br.com.biofrequencia.connection.*;
 import br.com.biofrequencia.logic.LimparCampos;
+import br.com.biofrequencia.logic.ValidarCPF;
+import br.com.biofrequencia.model.Usuario;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -16,7 +20,12 @@ import javax.swing.JOptionPane;
  */
 public class Login extends javax.swing.JFrame {
 
-    public LimparCampos lc = new LimparCampos();
+    private LimparCampos lc = new LimparCampos();
+    private Usuario usuarioModel = new Usuario();
+    private ValidarCPF vcpf = new ValidarCPF();
+    private connection conexaoBanco = new connection();
+    private ControleAcessoBanco controleAcessoBanco = new ControleAcessoBanco();
+    private Connection con;
     
     /**
      * Creates new form Login
@@ -29,6 +38,12 @@ public class Login extends javax.swing.JFrame {
         String arqCam = nf + "\\src\\br\\com\\biofrequencia\\imagensNewIcons\\favicon.png";
         ImageIcon icone = new ImageIcon(arqCam);
         setIconImage(icone.getImage());
+        
+        try {
+            con = (Connection) conexaoBanco.con();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -157,6 +172,11 @@ public class Login extends javax.swing.JFrame {
                 btnEntrarMouseExited(evt);
             }
         });
+        btnEntrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEntrarActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnEntrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 280, 70, 50));
 
         lblEntrar.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 18)); // NOI18N
@@ -205,7 +225,11 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEntrarMouseExited
 
     private void btnEntrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEntrarMouseClicked
-        logar();
+        try {
+            logar();
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
     }//GEN-LAST:event_btnEntrarMouseClicked
 
     private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
@@ -216,12 +240,28 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanel1KeyPressed
 
     private void txtCPFKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCPFKeyPressed
-        enter(evt);
+        try {
+            enter(evt);
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
     }//GEN-LAST:event_txtCPFKeyPressed
 
     private void txtSenhaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSenhaKeyPressed
-        enter(evt);
+        try {
+            enter(evt);
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
     }//GEN-LAST:event_txtSenhaKeyPressed
+
+    private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
+        try {
+            logar();
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }//GEN-LAST:event_btnEntrarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -282,12 +322,12 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JPasswordField txtSenha;
     // End of variables declaration//GEN-END:variables
 
-    public void enter(KeyEvent evt) {
+    public void enter(KeyEvent evt) throws IOException {
         if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
             logar();
         }
     }
-    public void logar() {
+    public void logar() throws IOException {
         String cpf = txtCPF.getText();
         String senha = txtSenha.getText();
         if(cpf.equals("") || senha.equals("")) {
@@ -295,20 +335,32 @@ public class Login extends javax.swing.JFrame {
             lc.limpaCampos(jPanel1);
             txtCPF.requestFocus();
         } else {
-            if(cpf.equals("lucas") && senha.equals("123")) {
-                Main main = null;
-                try {
-                    main = new Main();
-                } catch (IOException ex) {
-                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            if(vcpf.CPF(cpf)==true) {
+                System.out.println("Passou pelo teste do CPF");
+                usuarioModel.setCPF(cpf);//seta o cpf na classe do user
+                usuarioModel = controleAcessoBanco.ler(con, usuarioModel, senha);
+                if (usuarioModel.getSenha().equals(senha)) {//compara se a senha que o usuario digitou é igual á da classe
+                    try {
+                        con.close();
+                        System.out.println("Encerrando Conexão Com o Banco");
+                    } catch (SQLException ex) {
+                        Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    Main main = new Main(usuarioModel);//chama a prox tela
+                    main.setVisible(true);
+
+                    this.dispose();
+                } else {//caso a senha não for igual a da classe usuario ele faz isso
+                    lc.limpaCampos(jPanel1);
+                    lblErro.setText("Acesso Negado");
+                    txtCPF.requestFocus();
                 }
-                main.setVisible(true);
-                dispose();
-            } else {
-                lblErro.setText("CPF/Senha incorreto(s)!");
-                lc.limpaCampos(jPanel1);
-                txtCPF.requestFocus();
+            } else {//o cpf que o usuario digitou é inválido
+                LimparCampos limparCampos = new LimparCampos();
+                limparCampos.limpaCampos(jPanel1);
+                lblErro.setText("CPF inválido!");
             }
         }
     }
+    
 }

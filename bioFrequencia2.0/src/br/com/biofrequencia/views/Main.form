@@ -191,6 +191,7 @@
               </Properties>
               <Events>
                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnMenuConfigMouseClicked"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnMenuConfigActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JButton" name="jButton1">
@@ -337,16 +338,20 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jLabel4" alignment="0" min="-2" pref="73" max="-2" attributes="0"/>
                   <Group type="102" attributes="0">
-                      <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Component id="jLabel6" min="-2" pref="53" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
-                  <Component id="jLabel6" min="-2" pref="53" max="-2" attributes="0"/>
-                  <Component id="jLabel4" alignment="0" min="-2" pref="73" max="-2" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -1333,8 +1338,8 @@
                                       </Group>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jButton2" min="-2" pref="50" max="-2" attributes="0"/>
-                                  <EmptySpace pref="14" max="32767" attributes="0"/>
+                                  <Component id="btnPesquisa" min="-2" pref="50" max="-2" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
@@ -1344,7 +1349,7 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" attributes="0">
-                                          <Component id="jButton2" min="-2" pref="33" max="-2" attributes="0"/>
+                                          <Component id="btnPesquisa" min="-2" pref="33" max="-2" attributes="0"/>
                                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                       </Group>
                                       <Group type="102" attributes="0">
@@ -1497,22 +1502,23 @@
                           </Events>
                         </Component>
                         <Component class="javax.swing.JTextField" name="tPesquisa">
-                          <Properties>
-                            <Property name="enabled" type="boolean" value="false"/>
-                          </Properties>
                           <Events>
                             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tPesquisaActionPerformed"/>
+                            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="tPesquisaKeyPressed"/>
                           </Events>
                         </Component>
                         <Component class="javax.swing.JComboBox" name="cbPesquisa">
                           <Properties>
                             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                              <StringArray count="0"/>
+                              <StringArray count="3">
+                                <StringItem index="0" value="Nome"/>
+                                <StringItem index="1" value="RG / RA"/>
+                                <StringItem index="2" value="CPF"/>
+                              </StringArray>
                             </Property>
-                            <Property name="enabled" type="boolean" value="false"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JButton" name="jButton2">
+                        <Component class="javax.swing.JButton" name="btnPesquisa">
                           <Properties>
                             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                               <Color blue="33" green="33" red="33" type="rgb"/>
@@ -1523,6 +1529,9 @@
                             <Property name="contentAreaFilled" type="boolean" value="false"/>
                             <Property name="enabled" type="boolean" value="false"/>
                           </Properties>
+                          <Events>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPesquisaActionPerformed"/>
+                          </Events>
                         </Component>
                       </SubComponents>
                     </Container>
@@ -1548,11 +1557,11 @@
                           <Layout>
                             <DimensionLayout dim="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <EmptySpace min="0" pref="759" max="32767" attributes="0"/>
+                                  <EmptySpace min="0" pref="755" max="32767" attributes="0"/>
                                   <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
                                       <Group type="102" alignment="0" attributes="0">
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jScrollPane2" pref="739" max="32767" attributes="0"/>
+                                          <Component id="jScrollPane2" pref="735" max="32767" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
@@ -1611,11 +1620,11 @@
                           <Layout>
                             <DimensionLayout dim="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <EmptySpace min="0" pref="759" max="32767" attributes="0"/>
+                                  <EmptySpace min="0" pref="755" max="32767" attributes="0"/>
                                   <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
                                       <Group type="102" alignment="0" attributes="0">
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jScrollPane3" pref="739" max="32767" attributes="0"/>
+                                          <Component id="jScrollPane3" pref="735" max="32767" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
@@ -1801,6 +1810,7 @@
                               </Properties>
                               <Events>
                                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnMenuFuncionarioMouseClicked"/>
+                                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnMenuFuncionarioActionPerformed"/>
                               </Events>
                             </Component>
                             <Component class="javax.swing.JButton" name="btnMenuAluno">
@@ -1820,6 +1830,7 @@
                               </Properties>
                               <Events>
                                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnMenuAlunoMouseClicked"/>
+                                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnMenuAlunoActionPerformed"/>
                               </Events>
                             </Component>
                             <Component class="javax.swing.JButton" name="btnMenuTurma">
@@ -2138,7 +2149,7 @@
                                             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                                               <Color blue="33" green="33" red="33" type="rgb"/>
                                             </Property>
-                                            <Property name="text" type="java.lang.String" value="Data de Nascimento:"/>
+                                            <Property name="text" type="java.lang.String" value="*Data de Nascimento:"/>
                                           </Properties>
                                         </Component>
                                         <Component class="javax.swing.JLabel" name="lCPFUser">
@@ -2251,7 +2262,7 @@
                                         <Component class="javax.swing.JFormattedTextField" name="tfTelCelUser">
                                           <Properties>
                                             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor" preCode="try {" postCode="} catch (java.text.ParseException ex) {&#xa;ex.printStackTrace();&#xa;}">
-                                              <Format format="9-####-####" subtype="-1" type="5"/>
+                                              <Format format="(##)9####-####" subtype="-1" type="5"/>
                                             </Property>
                                           </Properties>
                                         </Component>
@@ -2272,7 +2283,7 @@
                                         <Component class="javax.swing.JFormattedTextField" name="tfRGUser">
                                           <Properties>
                                             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor" preCode="try {" postCode="} catch (java.text.ParseException ex) {&#xa;ex.printStackTrace();&#xa;}">
-                                              <Format format="##.###.###-#-UU" subtype="-1" type="5"/>
+                                              <Format format="##.###.###-#" subtype="-1" type="5"/>
                                             </Property>
                                           </Properties>
                                         </Component>
@@ -2406,16 +2417,6 @@
                                                           <Component id="jSeparator4" alignment="0" max="32767" attributes="0"/>
                                                           <Group type="102" alignment="0" attributes="0">
                                                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                                                  <Group type="102" alignment="0" attributes="0">
-                                                                      <Component id="lNmResAluno2" min="-2" max="-2" attributes="0"/>
-                                                                      <EmptySpace max="-2" attributes="0"/>
-                                                                      <Component id="tRespAluno2" max="32767" attributes="0"/>
-                                                                  </Group>
-                                                                  <Group type="102" alignment="0" attributes="0">
-                                                                      <Component id="lNmResAluno1" min="-2" max="-2" attributes="0"/>
-                                                                      <EmptySpace max="-2" attributes="0"/>
-                                                                      <Component id="tRespAluno1" max="32767" attributes="0"/>
-                                                                  </Group>
                                                                   <Group type="102" alignment="1" attributes="0">
                                                                       <Component id="lCidadeAluno" min="-2" max="-2" attributes="0"/>
                                                                       <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -2426,9 +2427,8 @@
                                                                       <Component id="tEndAluno" max="32767" attributes="0"/>
                                                                   </Group>
                                                                   <Group type="102" alignment="1" attributes="0">
-                                                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                                                          <Group type="102" alignment="0" attributes="0">
+                                                                      <Group type="103" groupAlignment="0" attributes="0">
+                                                                          <Group type="102" attributes="0">
                                                                               <Component id="lDtNasAluno" min="-2" max="-2" attributes="0"/>
                                                                               <EmptySpace max="-2" attributes="0"/>
                                                                               <Component id="tfDtNasAluno" max="32767" attributes="0"/>
@@ -2437,16 +2437,17 @@
                                                                               <Component id="lTelAluno" min="-2" max="-2" attributes="0"/>
                                                                               <EmptySpace max="-2" attributes="0"/>
                                                                               <Component id="tfTelAluno" min="-2" pref="118" max="-2" attributes="0"/>
+                                                                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                                                           </Group>
                                                                       </Group>
-                                                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                                                      <EmptySpace max="-2" attributes="0"/>
                                                                       <Group type="103" groupAlignment="0" attributes="0">
-                                                                          <Group type="102" alignment="0" attributes="0">
-                                                                              <Component id="lSexoAluno" min="-2" max="-2" attributes="0"/>
+                                                                          <Group type="102" attributes="0">
+                                                                              <Component id="lSexoAluno" min="-2" pref="42" max="-2" attributes="0"/>
                                                                               <EmptySpace max="-2" attributes="0"/>
                                                                               <Component id="cbSexoAluno" min="-2" pref="124" max="-2" attributes="0"/>
                                                                           </Group>
-                                                                          <Group type="102" alignment="0" attributes="0">
+                                                                          <Group type="102" attributes="0">
                                                                               <Component id="lCelAluno" min="-2" max="-2" attributes="0"/>
                                                                               <EmptySpace max="-2" attributes="0"/>
                                                                               <Component id="tfCelularAluno" min="-2" pref="120" max="-2" attributes="0"/>
@@ -2471,22 +2472,32 @@
                                                                           </Group>
                                                                       </Group>
                                                                       <EmptySpace max="32767" attributes="0"/>
-                                                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                                                          <Group type="102" alignment="1" attributes="0">
+                                                                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                                                          <Group type="102" attributes="0">
                                                                               <Component id="lNomeAluno" min="-2" max="-2" attributes="0"/>
                                                                               <EmptySpace max="-2" attributes="0"/>
                                                                               <Component id="tNomeAluno" min="-2" pref="323" max="-2" attributes="0"/>
                                                                           </Group>
-                                                                          <Group type="102" alignment="0" attributes="0">
+                                                                          <Group type="102" attributes="0">
                                                                               <Component id="lCursoAluno" min="-2" max="-2" attributes="0"/>
                                                                               <EmptySpace max="-2" attributes="0"/>
-                                                                              <Component id="cbCursoAluno" min="-2" pref="152" max="-2" attributes="0"/>
-                                                                              <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
+                                                                              <Component id="cbCursoAluno" max="32767" attributes="0"/>
+                                                                              <EmptySpace max="-2" attributes="0"/>
                                                                               <Component id="lTurmaAluno" min="-2" max="-2" attributes="0"/>
                                                                               <EmptySpace max="-2" attributes="0"/>
-                                                                              <Component id="cbTurmaAluno" min="-2" pref="149" max="-2" attributes="0"/>
-                                                                              <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
+                                                                              <Component id="cbTurmaAluno" min="-2" pref="135" max="-2" attributes="0"/>
                                                                           </Group>
+                                                                      </Group>
+                                                                  </Group>
+                                                                  <Group type="102" alignment="0" attributes="0">
+                                                                      <Group type="103" groupAlignment="0" attributes="0">
+                                                                          <Component id="lNmResAluno1" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                                          <Component id="lNmResAluno2" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                                      </Group>
+                                                                      <EmptySpace max="-2" attributes="0"/>
+                                                                      <Group type="103" groupAlignment="0" attributes="0">
+                                                                          <Component id="tRespAluno2" max="32767" attributes="0"/>
+                                                                          <Component id="tRespAluno1" max="32767" attributes="0"/>
                                                                       </Group>
                                                                   </Group>
                                                               </Group>
@@ -2597,7 +2608,7 @@
                                                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                                                   <Font name="Berlin Sans FB Demi" size="12" style="0"/>
                                                 </Property>
-                                                <Property name="text" type="java.lang.String" value="Nome Completo:"/>
+                                                <Property name="text" type="java.lang.String" value="*Nome Completo:"/>
                                               </Properties>
                                             </Component>
                                             <Component class="javax.swing.JLabel" name="lDtNasAluno">
@@ -2605,7 +2616,7 @@
                                                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                                                   <Font name="Berlin Sans FB Demi" size="12" style="0"/>
                                                 </Property>
-                                                <Property name="text" type="java.lang.String" value="Data de Nascimento:"/>
+                                                <Property name="text" type="java.lang.String" value="*Data de Nascimento:"/>
                                               </Properties>
                                             </Component>
                                             <Component class="javax.swing.JLabel" name="lNumAluno">
@@ -2629,7 +2640,7 @@
                                                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                                                   <Font name="Berlin Sans FB Demi" size="12" style="0"/>
                                                 </Property>
-                                                <Property name="text" type="java.lang.String" value="Telefone Celular:"/>
+                                                <Property name="text" type="java.lang.String" value="*Telefone Celular:"/>
                                               </Properties>
                                             </Component>
                                             <Component class="javax.swing.JLabel" name="lCidadeAluno">
@@ -2637,7 +2648,7 @@
                                                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                                                   <Font name="Berlin Sans FB Demi" size="12" style="0"/>
                                                 </Property>
-                                                <Property name="text" type="java.lang.String" value="Cidade:"/>
+                                                <Property name="text" type="java.lang.String" value="*Cidade:"/>
                                               </Properties>
                                             </Component>
                                             <Component class="javax.swing.JLabel" name="lEndAluno">
@@ -2661,7 +2672,7 @@
                                                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                                                   <Font name="Berlin Sans FB Demi" size="12" style="0"/>
                                                 </Property>
-                                                <Property name="text" type="java.lang.String" value="Sexo:"/>
+                                                <Property name="text" type="java.lang.String" value="*Sexo:"/>
                                               </Properties>
                                             </Component>
                                             <Component class="javax.swing.JLabel" name="lNmResAluno1">
@@ -2669,7 +2680,7 @@
                                                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                                                   <Font name="Berlin Sans FB Demi" size="12" style="0"/>
                                                 </Property>
-                                                <Property name="text" type="java.lang.String" value="Nome do Respons&#xe1;vel 1:"/>
+                                                <Property name="text" type="java.lang.String" value="*Nome do Respons&#xe1;vel 1:"/>
                                               </Properties>
                                             </Component>
                                             <Component class="javax.swing.JLabel" name="lNmResAluno2">
@@ -2701,6 +2712,9 @@
                                                   </StringArray>
                                                 </Property>
                                               </Properties>
+                                              <Events>
+                                                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbSexoAlunoActionPerformed"/>
+                                              </Events>
                                             </Component>
                                             <Component class="javax.swing.JFormattedTextField" name="tfDtNasAluno">
                                               <Properties>
@@ -2802,7 +2816,7 @@
                                             <Component class="javax.swing.JFormattedTextField" name="tfRAAluno">
                                               <Properties>
                                                 <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor" preCode="try {" postCode="} catch (java.text.ParseException ex) {&#xa;ex.printStackTrace();&#xa;}">
-                                                  <Format format="##.###.###-#-UU" subtype="-1" type="5"/>
+                                                  <Format format="##.###.###-#" subtype="-1" type="5"/>
                                                 </Property>
                                               </Properties>
                                               <Events>
@@ -2962,7 +2976,7 @@
                                       <Group type="102" alignment="0" attributes="0">
                                           <EmptySpace min="-2" pref="88" max="-2" attributes="0"/>
                                           <Component id="pCadTurma" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace pref="145" max="32767" attributes="0"/>
+                                          <EmptySpace pref="181" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                                 </DimensionLayout>
@@ -3012,7 +3026,6 @@
                                                               </Group>
                                                               <Group type="103" groupAlignment="0" attributes="0">
                                                                   <Group type="102" alignment="1" attributes="0">
-                                                                      <EmptySpace max="-2" attributes="0"/>
                                                                       <Component id="lAnoTurma" min="-2" max="-2" attributes="0"/>
                                                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                                                       <Component id="tfAnoTurma" min="-2" pref="77" max="-2" attributes="0"/>
@@ -3056,7 +3069,6 @@
                                                   </Group>
                                                   <Component id="cbCursoTurma" alignment="0" min="-2" max="-2" attributes="0"/>
                                               </Group>
-                                              <EmptySpace type="separate" max="-2" attributes="0"/>
                                               <Group type="103" groupAlignment="0" attributes="0">
                                                   <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                                                       <Component id="cbModuloTurma" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -3070,7 +3082,6 @@
                                                       <Component id="lModuloTurma" min="-2" max="-2" attributes="0"/>
                                                   </Group>
                                               </Group>
-                                              <EmptySpace type="separate" max="-2" attributes="0"/>
                                               <Group type="103" groupAlignment="0" attributes="0">
                                                   <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                                                       <Component id="tSiglaTurma" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -3419,6 +3430,10 @@
                                               <Font name="Berlin Sans FB Demi" size="12" style="0"/>
                                             </Property>
                                           </Properties>
+                                          <AuxValues>
+                                            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="spQtdModCurso.setModel(new SpinnerNumberModel(0, 0, 10, 1));"/>
+                                            <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="Main_spQtdModCurso"/>
+                                          </AuxValues>
                                         </Component>
                                         <Component class="javax.swing.JSeparator" name="jSeparator8">
                                         </Component>
@@ -3970,7 +3985,7 @@
                 </Container>
                 <Container class="javax.swing.JInternalFrame" name="ifConfiguracoes">
                   <Properties>
-                    <Property name="visible" type="boolean" value="false"/>
+                    <Property name="visible" type="boolean" value="true"/>
                   </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -4232,9 +4247,12 @@
                             <Component class="javax.swing.JFormattedTextField" name="tfRGEditUser">
                               <Properties>
                                 <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor" preCode="try {" postCode="} catch (java.text.ParseException ex) {&#xa;ex.printStackTrace();&#xa;}">
-                                  <Format format="##.###.###-#-UU" subtype="-1" type="5"/>
+                                  <Format format="##.###.###-#" subtype="-1" type="5"/>
                                 </Property>
                               </Properties>
+                              <AuxValues>
+                                <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="Main_tfRGEditUser"/>
+                              </AuxValues>
                             </Component>
                             <Component class="javax.swing.JButton" name="btnEditUser">
                               <Properties>
@@ -4260,6 +4278,9 @@
                                 </Property>
                                 <Property name="text" type="java.lang.String" value="Cancelar"/>
                               </Properties>
+                              <Events>
+                                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCancelarEditUserActionPerformed"/>
+                              </Events>
                             </Component>
                             <Component class="javax.swing.JSeparator" name="jSeparator2">
                             </Component>
@@ -4379,6 +4400,9 @@
                                 </Property>
                                 <Property name="text" type="java.lang.String" value="Cancelar"/>
                               </Properties>
+                              <Events>
+                                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCancelarActionPerformed"/>
+                              </Events>
                             </Component>
                             <Component class="javax.swing.JButton" name="btnAlterar">
                               <Properties>
