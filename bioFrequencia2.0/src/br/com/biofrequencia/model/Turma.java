@@ -6,18 +6,26 @@ package br.com.biofrequencia.model;
  */
 public class Turma {
 
-    private int id = 0;
-    private int curso = 0;
-    private int modulo = 0;
-    private String periodo = "";
-    private int ano = 0;
-    private String sigla = "";
-    private String sala = "";
-    private int semestre = 0;
-    private boolean ativo = false;
+    private int id;
+    private int curso;
+    private int modulo;
+    private String periodo;
+    private int ano;
+    private String sigla;
+    private String sala;
+    private int semestre;
+    private boolean ativo;
 
     public Turma() {
-
+        this.id = 0;
+        this.curso = 0;
+        this.modulo = 0;
+        this.periodo = "";
+        this.ano = 0;
+        this.sigla = "";
+        this.sala = "";
+        this.semestre = 0;
+        this.ativo = false;
     }
 
     public Turma(int id, int curso, int modulo, String periodo, int ano, String sigla, String sala, int semestre, boolean ativo) {

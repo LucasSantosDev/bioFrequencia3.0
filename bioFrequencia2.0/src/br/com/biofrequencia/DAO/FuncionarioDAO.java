@@ -3,7 +3,9 @@ package br.com.biofrequencia.DAO;
 import br.com.biofrequencia.model.Funcionario;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
@@ -41,5 +43,19 @@ public class FuncionarioDAO {
             st.close();
             con.close();  
         }
+    }
+    
+    public ArrayList<Funcionario> pesquisar(String sql, Connection con) {
+        System.out.println(sql);
+        ArrayList<Funcionario> lista = new ArrayList<>();
+        try (PreparedStatement st = (PreparedStatement) con.prepareStatement(sql);
+                ResultSet rs = st.executeQuery()) {
+            while (rs.next()) {
+                lista.add(new Funcionario(rs.getInt(1), rs.getString(2), rs.getString(3).replace("/", ""), rs.getString(4).replace(".", "").replace("-", ""), rs.getString(5).replace(".", "").replace("-", ""), rs.getString(6).replace("(", "").replace(")", "").replace("-", ""), rs.getString(7).replace("(", "").replace(")", "").replace("-", ""), rs.getString(8), rs.getInt(9), rs.getBoolean(10), rs.getString(11)));
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return lista;
     }
 }

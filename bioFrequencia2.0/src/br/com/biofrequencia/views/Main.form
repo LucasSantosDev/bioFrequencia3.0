@@ -84,30 +84,29 @@
                       <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
                       <Component id="jButton1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnMenuCadastrar" pref="98" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnMenuPesquisar" min="-2" pref="99" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="btnMenuCadastrar" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Component id="btnMenuChamadaBiometrica" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
+                      <Component id="btnMenuChamadaManual" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnMenuChamadaManual" min="-2" pref="94" max="-2" attributes="0"/>
+                      <Component id="btnMenuConfig" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnMenuConfig" min="-2" pref="131" max="-2" attributes="0"/>
+                      <Component id="btnMenuLogoff" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnMenuLogoff" min="-2" pref="88" max="-2" attributes="0"/>
+                      <Component id="btnMenuSair" min="-2" pref="98" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnMenuSair" min="-2" pref="79" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="btnMenuConfig" alignment="0" max="32767" attributes="0"/>
+                  <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                      <Component id="btnMenuConfig" alignment="3" max="32767" attributes="0"/>
+                      <Component id="btnMenuChamadaManual" alignment="3" max="32767" attributes="0"/>
+                  </Group>
                   <Component id="jButton1" max="32767" attributes="0"/>
-                  <Component id="btnMenuChamadaManual" alignment="0" max="32767" attributes="0"/>
                   <Component id="btnMenuChamadaBiometrica" alignment="0" max="32767" attributes="0"/>
-                  <Component id="btnMenuPesquisar" max="32767" attributes="0"/>
                   <Component id="btnMenuLogoff" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Component id="btnMenuSair" min="-2" pref="49" max="-2" attributes="0"/>
@@ -134,9 +133,6 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Sair"/>
                 <Property name="toolTipText" type="java.lang.String" value="Sair"/>
-                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="null"/>
-                </Property>
                 <Property name="contentAreaFilled" type="boolean" value="false"/>
               </Properties>
               <Events>
@@ -159,9 +155,6 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Logoff"/>
                 <Property name="toolTipText" type="java.lang.String" value="Logoff"/>
-                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="null"/>
-                </Property>
                 <Property name="contentAreaFilled" type="boolean" value="false"/>
               </Properties>
               <Events>
@@ -184,9 +177,6 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Configura&#xe7;&#xf5;es"/>
                 <Property name="toolTipText" type="java.lang.String" value="Configura&#xe7;&#xf5;es"/>
-                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="null"/>
-                </Property>
                 <Property name="contentAreaFilled" type="boolean" value="false"/>
               </Properties>
               <Events>
@@ -201,11 +191,6 @@
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/br/com/biofrequencia/imagensNewIcons/menu.png"/>
-                </Property>
-                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="org.netbeans.modules.form.compat2.border.CompoundBorderInfo">
-                    <CompoundBorder/>
-                  </Border>
                 </Property>
                 <Property name="contentAreaFilled" type="boolean" value="false"/>
                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
@@ -232,13 +217,11 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Manual"/>
                 <Property name="toolTipText" type="java.lang.String" value="Chamada Manual"/>
-                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="null"/>
-                </Property>
                 <Property name="contentAreaFilled" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnMenuChamadaManualMouseClicked"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnMenuChamadaManualActionPerformed"/>
                 <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="btnMenuChamadaManualKeyPressed"/>
               </Events>
             </Component>
@@ -264,31 +247,6 @@
                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnMenuChamadaBiometricaMouseClicked"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="btnMenuPesquisar">
-              <Properties>
-                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
-                </Property>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Berlin Sans FB Demi" size="12" style="0"/>
-                </Property>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
-                </Property>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/br/com/biofrequencia/imagensNewIcons/search.png"/>
-                </Property>
-                <Property name="text" type="java.lang.String" value="Pesquisar"/>
-                <Property name="toolTipText" type="java.lang.String" value="Pesquisar"/>
-                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="null"/>
-                </Property>
-                <Property name="contentAreaFilled" type="boolean" value="false"/>
-              </Properties>
-              <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnMenuPesquisarMouseClicked"/>
-              </Events>
-            </Component>
             <Component class="javax.swing.JButton" name="btnMenuCadastrar">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -302,9 +260,6 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Cadastrar"/>
                 <Property name="toolTipText" type="java.lang.String" value="Cadastrar"/>
-                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="null"/>
-                </Property>
                 <Property name="contentAreaFilled" type="boolean" value="false"/>
               </Properties>
               <Events>
@@ -405,6 +360,13 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="FramesInternos" alignment="0" pref="0" max="32767" attributes="0"/>
+                  <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace min="-2" pref="339" max="-2" attributes="0"/>
+                          <Component id="btnMenuPesquisar" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" pref="340" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -412,6 +374,13 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="FramesInternos" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace min="-2" pref="257" max="-2" attributes="0"/>
+                          <Component id="btnMenuPesquisar" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" pref="257" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -848,10 +817,10 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace pref="136" max="32767" attributes="0"/>
-                              <Component id="pChamadaManual" max="32767" attributes="0"/>
-                              <EmptySpace pref="135" max="32767" attributes="0"/>
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace pref="45" max="32767" attributes="0"/>
+                              <Component id="pChamadaManual" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace pref="36" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -880,9 +849,9 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                      <Component id="pChamadaManualInicio" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="pAlunosChamadaManual" alignment="1" max="32767" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="pAlunosChamadaManual" max="32767" attributes="0"/>
+                                      <Component id="pChamadaManualInicio" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
@@ -918,7 +887,7 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="jScrollPane5" pref="0" max="32767" attributes="0"/>
+                                      <Component id="jScrollPane5" pref="647" max="32767" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                   </Group>
                               </Group>
@@ -957,6 +926,12 @@
                                       <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                                     </Property>
                                   </Properties>
+                                  <Events>
+                                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jTableChamadaManualMouseClicked"/>
+                                  </Events>
+                                  <AuxValues>
+                                    <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="Main_jTableChamadaManual"/>
+                                  </AuxValues>
                                 </Component>
                               </SubComponents>
                             </Container>
@@ -976,28 +951,28 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                          <Group type="102" alignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Group type="102" attributes="0">
                                               <Component id="lTurmaChamadaManual" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                              <Component id="cbTurmaChamadaManual" min="-2" pref="100" max="-2" attributes="0"/>
+                                              <Component id="cbTurmaChamadaManual" min="-2" pref="138" max="-2" attributes="0"/>
                                               <EmptySpace type="separate" max="-2" attributes="0"/>
                                               <Component id="lAulaChamadaManual" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="cbAulaChamadaManual" min="-2" pref="100" max="-2" attributes="0"/>
+                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                              <Component id="cbAulaChamadaManual" max="32767" attributes="0"/>
                                           </Group>
-                                          <Group type="102" alignment="0" attributes="0">
+                                          <Group type="102" attributes="0">
                                               <Component id="lProfChamadaManual" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
                                               <Component id="tProfChamadaManual" max="32767" attributes="0"/>
                                           </Group>
                                       </Group>
-                                      <EmptySpace max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                                       <Component id="jSeparator19" min="-2" pref="8" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                           <Component id="btnFinalizarChamadaManual" max="32767" attributes="0"/>
-                                          <Component id="btnIniciarChamadaManual" max="32767" attributes="0"/>
+                                          <Component id="btnIniciarChamadaManual" min="-2" pref="137" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace max="-2" attributes="0"/>
                                   </Group>
@@ -1006,34 +981,35 @@
                             <DimensionLayout dim="1">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="1" attributes="0">
-                                      <EmptySpace pref="12" max="32767" attributes="0"/>
+                                      <EmptySpace pref="13" max="32767" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Group type="102" alignment="0" attributes="0">
-                                              <Group type="103" groupAlignment="3" attributes="0">
-                                                  <Component id="lTurmaChamadaManual" alignment="3" min="-2" max="-2" attributes="0"/>
-                                                  <Component id="cbTurmaChamadaManual" alignment="3" min="-2" max="-2" attributes="0"/>
-                                                  <Component id="btnIniciarChamadaManual" alignment="3" min="-2" max="-2" attributes="0"/>
-                                                  <Component id="lAulaChamadaManual" alignment="3" min="-2" max="-2" attributes="0"/>
-                                                  <Component id="cbAulaChamadaManual" alignment="3" min="-2" max="-2" attributes="0"/>
-                                              </Group>
-                                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                              <EmptySpace min="1" pref="1" max="-2" attributes="0"/>
+                                              <Group type="103" groupAlignment="0" attributes="0">
                                                   <Group type="102" alignment="0" attributes="0">
-                                                      <EmptySpace max="-2" attributes="0"/>
-                                                      <Group type="103" groupAlignment="3" attributes="0">
-                                                          <Component id="lProfChamadaManual" alignment="3" min="-2" max="-2" attributes="0"/>
-                                                          <Component id="tProfChamadaManual" alignment="3" min="-2" max="-2" attributes="0"/>
-                                                      </Group>
-                                                      <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                                                  </Group>
-                                                  <Group type="102" alignment="1" attributes="0">
+                                                      <Component id="btnIniciarChamadaManual" min="-2" max="-2" attributes="0"/>
                                                       <EmptySpace max="32767" attributes="0"/>
                                                       <Component id="btnFinalizarChamadaManual" min="-2" max="-2" attributes="0"/>
                                                   </Group>
+                                                  <Component id="jSeparator19" min="-2" pref="52" max="-2" attributes="0"/>
                                               </Group>
+                                              <EmptySpace max="-2" attributes="0"/>
                                           </Group>
-                                          <Component id="jSeparator19" min="-2" pref="52" max="-2" attributes="0"/>
+                                          <Group type="102" alignment="1" attributes="0">
+                                              <Group type="103" groupAlignment="3" attributes="0">
+                                                  <Component id="lTurmaChamadaManual" alignment="3" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="cbTurmaChamadaManual" alignment="3" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="lAulaChamadaManual" alignment="3" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="cbAulaChamadaManual" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              </Group>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Group type="103" groupAlignment="3" attributes="0">
+                                                  <Component id="lProfChamadaManual" alignment="3" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="tProfChamadaManual" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              </Group>
+                                              <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
+                                          </Group>
                                       </Group>
-                                      <EmptySpace max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                             </DimensionLayout>
@@ -1061,14 +1037,14 @@
                                   <Font name="Berlin Sans FB Demi" size="12" style="0"/>
                                 </Property>
                                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                                  <StringArray count="4">
-                                    <StringItem index="0" value="Item 1"/>
-                                    <StringItem index="1" value="Item 2"/>
-                                    <StringItem index="2" value="Item 3"/>
-                                    <StringItem index="3" value="Item 4"/>
-                                  </StringArray>
+                                  <StringArray count="0"/>
                                 </Property>
                               </Properties>
+                              <Events>
+                                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbTurmaChamadaManualItemStateChanged"/>
+                                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbTurmaChamadaManualActionPerformed"/>
+                                <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="cbTurmaChamadaManualPropertyChange"/>
+                              </Events>
                             </Component>
                             <Component class="javax.swing.JComboBox" name="cbAulaChamadaManual">
                               <Properties>
@@ -1076,14 +1052,14 @@
                                   <Font name="Berlin Sans FB Demi" size="12" style="0"/>
                                 </Property>
                                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                                  <StringArray count="4">
-                                    <StringItem index="0" value="Item 1"/>
-                                    <StringItem index="1" value="Item 2"/>
-                                    <StringItem index="2" value="Item 3"/>
-                                    <StringItem index="3" value="Item 4"/>
-                                  </StringArray>
+                                  <StringArray count="0"/>
                                 </Property>
                               </Properties>
+                              <Events>
+                                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="cbAulaChamadaManualMouseClicked"/>
+                                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbAulaChamadaManualItemStateChanged"/>
+                                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbAulaChamadaManualActionPerformed"/>
+                              </Events>
                             </Component>
                             <Component class="javax.swing.JButton" name="btnIniciarChamadaManual">
                               <Properties>
@@ -1104,6 +1080,9 @@
                                 <Property name="text" type="java.lang.String" value="Finalizar Chamada"/>
                                 <Property name="enabled" type="boolean" value="false"/>
                               </Properties>
+                              <Events>
+                                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnFinalizarChamadaManualActionPerformed"/>
+                              </Events>
                             </Component>
                             <Component class="javax.swing.JLabel" name="lProfChamadaManual">
                               <Properties>
@@ -1118,7 +1097,7 @@
                                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                                   <Font name="Berlin Sans FB Demi" size="12" style="0"/>
                                 </Property>
-                                <Property name="text" type="java.lang.String" value="Professor1 e Professor 2"/>
+                                <Property name="text" type="java.lang.String" value="Professor1 e/ou Professor 2"/>
                                 <Property name="enabled" type="boolean" value="false"/>
                               </Properties>
                             </Component>
@@ -1135,12 +1114,6 @@
                 </Container>
                 <Container class="javax.swing.JInternalFrame" name="ifHome">
                   <Properties>
-                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="ff" green="ff" red="ff" type="rgb"/>
-                    </Property>
-                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                      <Border info="null"/>
-                    </Property>
                     <Property name="autoscrolls" type="boolean" value="true"/>
                     <Property name="debugGraphicsOptions" type="int" value="-1"/>
                     <Property name="maximum" type="boolean" value="true"/>
@@ -1557,11 +1530,11 @@
                           <Layout>
                             <DimensionLayout dim="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <EmptySpace min="0" pref="755" max="32767" attributes="0"/>
+                                  <EmptySpace min="0" pref="759" max="32767" attributes="0"/>
                                   <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
                                       <Group type="102" alignment="0" attributes="0">
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jScrollPane2" pref="735" max="32767" attributes="0"/>
+                                          <Component id="jScrollPane2" pref="739" max="32767" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
@@ -1620,11 +1593,11 @@
                           <Layout>
                             <DimensionLayout dim="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <EmptySpace min="0" pref="755" max="32767" attributes="0"/>
+                                  <EmptySpace min="0" pref="759" max="32767" attributes="0"/>
                                   <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
                                       <Group type="102" alignment="0" attributes="0">
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jScrollPane3" pref="735" max="32767" attributes="0"/>
+                                          <Component id="jScrollPane3" pref="739" max="32767" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
@@ -1913,9 +1886,6 @@
                         </Container>
                         <Container class="javax.swing.JDesktopPane" name="dpTiposDeCadastro">
                           <Properties>
-                            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                              <Color blue="ff" green="ff" red="ff" type="rgb"/>
-                            </Property>
                             <Property name="opaque" type="boolean" value="false"/>
                           </Properties>
 
@@ -2964,19 +2934,19 @@
                               <Layout>
                                 <DimensionLayout dim="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <EmptySpace pref="139" max="32767" attributes="0"/>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <EmptySpace min="-2" pref="77" max="-2" attributes="0"/>
                                           <Component id="pCadTurma" min="-2" max="-2" attributes="1"/>
-                                          <EmptySpace min="-2" pref="132" max="-2" attributes="0"/>
+                                          <EmptySpace pref="109" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                                 </DimensionLayout>
                                 <DimensionLayout dim="1">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" alignment="0" attributes="0">
-                                          <EmptySpace min="-2" pref="88" max="-2" attributes="0"/>
+                                          <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
                                           <Component id="pCadTurma" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace pref="181" max="32767" attributes="0"/>
+                                          <EmptySpace pref="172" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                                 </DimensionLayout>
@@ -2999,103 +2969,89 @@
                                                   <Group type="102" alignment="1" attributes="0">
                                                       <EmptySpace max="32767" attributes="0"/>
                                                       <Component id="btnCadTurma" linkSize="6" min="-2" max="-2" attributes="0"/>
-                                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                                      <EmptySpace min="-2" pref="55" max="-2" attributes="0"/>
                                                       <Component id="btnLimparTurma" linkSize="6" min="-2" pref="83" max="-2" attributes="0"/>
                                                   </Group>
                                                   <Group type="102" alignment="0" attributes="0">
                                                       <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
                                                       <Group type="103" groupAlignment="0" attributes="0">
                                                           <Component id="jSeparator10" max="32767" attributes="0"/>
-                                                          <Group type="102" alignment="0" attributes="0">
-                                                              <Group type="103" groupAlignment="1" attributes="0">
-                                                                  <Group type="102" alignment="1" attributes="0">
-                                                                      <Component id="lModuloTurma" min="-2" max="-2" attributes="0"/>
-                                                                      <EmptySpace max="-2" attributes="0"/>
-                                                                      <Component id="cbModuloTurma" min="-2" pref="85" max="-2" attributes="0"/>
-                                                                      <EmptySpace min="-2" pref="151" max="-2" attributes="0"/>
-                                                                  </Group>
+                                                          <Group type="102" attributes="0">
+                                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                                  <Component id="lNomeCursoTurma" alignment="0" min="-2" max="-2" attributes="0"/>
                                                                   <Group type="102" alignment="0" attributes="0">
+                                                                      <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
                                                                       <Component id="lSiglaTurma" min="-2" max="-2" attributes="0"/>
-                                                                      <EmptySpace max="-2" attributes="0"/>
-                                                                      <Component id="tSiglaTurma" min="-2" pref="74" max="-2" attributes="0"/>
-                                                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                                                      <Component id="lSalaTurma" min="-2" max="-2" attributes="0"/>
-                                                                      <EmptySpace max="-2" attributes="0"/>
-                                                                      <Component id="tSalaTurma" min="-2" pref="75" max="-2" attributes="0"/>
                                                                   </Group>
                                                               </Group>
+                                                              <EmptySpace max="32767" attributes="0"/>
+                                                              <Component id="lSalaTurma" min="-2" max="-2" attributes="0"/>
+                                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                              <Component id="tSalaTurma" min="-2" pref="119" max="-2" attributes="0"/>
+                                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                              <Component id="lsemTurma" min="-2" max="-2" attributes="0"/>
+                                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                              <Component id="tfSemTurma" min="-2" pref="112" max="-2" attributes="0"/>
+                                                          </Group>
+                                                      </Group>
+                                                  </Group>
+                                                  <Group type="102" alignment="0" attributes="0">
+                                                      <EmptySpace max="-2" attributes="0"/>
+                                                      <Component id="lModuloTurma" min="-2" max="-2" attributes="0"/>
+                                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                      <Group type="103" groupAlignment="0" attributes="0">
+                                                          <Component id="cbCursoTurma" max="32767" attributes="0"/>
+                                                          <Group type="102" attributes="0">
                                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                                  <Group type="102" alignment="1" attributes="0">
+                                                                  <Group type="102" attributes="0">
+                                                                      <Component id="cbModuloTurma" min="-2" pref="169" max="-2" attributes="0"/>
+                                                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                                      <Component id="lPeriodoTurma" min="-2" max="-2" attributes="0"/>
+                                                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                                      <Component id="cbPeriodoTurma" min="-2" pref="134" max="-2" attributes="0"/>
+                                                                      <EmptySpace type="separate" max="-2" attributes="0"/>
                                                                       <Component id="lAnoTurma" min="-2" max="-2" attributes="0"/>
                                                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                                                       <Component id="tfAnoTurma" min="-2" pref="77" max="-2" attributes="0"/>
                                                                   </Group>
-                                                                  <Group type="102" attributes="0">
-                                                                      <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-                                                                      <Component id="lsemTurma" min="-2" max="-2" attributes="0"/>
-                                                                      <EmptySpace max="-2" attributes="0"/>
-                                                                      <Component id="tfSemTurma" min="-2" pref="126" max="-2" attributes="0"/>
-                                                                  </Group>
+                                                                  <Component id="tSiglaTurma" alignment="0" min="-2" pref="146" max="-2" attributes="0"/>
                                                               </Group>
-                                                          </Group>
-                                                          <Group type="102" alignment="0" attributes="0">
-                                                              <EmptySpace min="-2" pref="146" max="-2" attributes="0"/>
-                                                              <Component id="lPeriodoTurma" min="-2" max="-2" attributes="0"/>
-                                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                                              <Component id="cbPeriodoTurma" min="-2" pref="115" max="-2" attributes="0"/>
+                                                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                                           </Group>
                                                       </Group>
                                                   </Group>
                                               </Group>
                                               <EmptySpace max="-2" attributes="0"/>
                                           </Group>
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="lNomeCursoTurma" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace min="4" pref="4" max="4" attributes="0"/>
-                                              <Component id="cbCursoTurma" min="-2" pref="281" max="-2" attributes="0"/>
-                                              <EmptySpace max="32767" attributes="0"/>
-                                          </Group>
                                       </Group>
                                     </DimensionLayout>
                                     <DimensionLayout dim="1">
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Group type="102" alignment="0" attributes="0">
-                                              <EmptySpace pref="20" max="32767" attributes="0"/>
-                                              <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Group type="102" alignment="0" attributes="0">
-                                                      <EmptySpace min="4" pref="4" max="4" attributes="0"/>
-                                                      <Component id="lNomeCursoTurma" min="-2" max="-2" attributes="0"/>
-                                                  </Group>
-                                                  <Component id="cbCursoTurma" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+                                              <Group type="103" groupAlignment="3" attributes="0">
+                                                  <Component id="cbCursoTurma" alignment="3" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="lNomeCursoTurma" alignment="3" min="-2" max="-2" attributes="0"/>
                                               </Group>
-                                              <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                                                      <Component id="cbModuloTurma" alignment="3" min="-2" max="-2" attributes="0"/>
-                                                      <Component id="lPeriodoTurma" alignment="3" min="-2" max="-2" attributes="0"/>
-                                                      <Component id="cbPeriodoTurma" alignment="3" min="-2" max="-2" attributes="0"/>
-                                                      <Component id="lAnoTurma" alignment="3" min="-2" max="-2" attributes="0"/>
-                                                      <Component id="tfAnoTurma" alignment="3" min="-2" max="-2" attributes="0"/>
-                                                  </Group>
-                                                  <Group type="102" alignment="0" attributes="0">
-                                                      <EmptySpace min="4" pref="4" max="-2" attributes="0"/>
-                                                      <Component id="lModuloTurma" min="-2" max="-2" attributes="0"/>
-                                                  </Group>
+                                              <EmptySpace pref="13" max="32767" attributes="0"/>
+                                              <Group type="103" groupAlignment="3" attributes="0">
+                                                  <Component id="cbModuloTurma" alignment="3" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="lModuloTurma" alignment="3" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="cbPeriodoTurma" alignment="3" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="lPeriodoTurma" alignment="3" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="lAnoTurma" alignment="3" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="tfAnoTurma" alignment="3" min="-2" max="-2" attributes="0"/>
                                               </Group>
-                                              <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                                                      <Component id="tSiglaTurma" alignment="3" min="-2" max="-2" attributes="0"/>
-                                                      <Component id="lSalaTurma" alignment="3" min="-2" max="-2" attributes="0"/>
-                                                      <Component id="tSalaTurma" alignment="3" min="-2" max="-2" attributes="0"/>
-                                                      <Component id="lsemTurma" alignment="3" min="-2" max="-2" attributes="0"/>
-                                                      <Component id="tfSemTurma" alignment="3" min="-2" max="-2" attributes="0"/>
-                                                  </Group>
-                                                  <Group type="102" alignment="0" attributes="0">
-                                                      <EmptySpace min="3" pref="3" max="-2" attributes="0"/>
-                                                      <Component id="lSiglaTurma" min="-2" max="-2" attributes="0"/>
-                                                  </Group>
+                                              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                                              <Group type="103" groupAlignment="3" attributes="0">
+                                                  <Component id="lSiglaTurma" alignment="3" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="tSiglaTurma" alignment="3" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="lSalaTurma" alignment="3" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="tSalaTurma" alignment="3" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="lsemTurma" alignment="3" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="tfSemTurma" alignment="3" min="-2" max="-2" attributes="0"/>
                                               </Group>
-                                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                                              <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
                                               <Component id="jSeparator10" min="-2" pref="7" max="-2" attributes="0"/>
                                               <EmptySpace type="separate" max="-2" attributes="0"/>
                                               <Group type="103" groupAlignment="3" attributes="0">
@@ -4428,6 +4384,28 @@
                 </Container>
               </SubComponents>
             </Container>
+            <Component class="javax.swing.JButton" name="btnMenuPesquisar">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                </Property>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Berlin Sans FB Demi" size="12" style="0"/>
+                </Property>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                </Property>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/br/com/biofrequencia/imagensNewIcons/search.png"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Pesquisar"/>
+                <Property name="toolTipText" type="java.lang.String" value="Pesquisar"/>
+                <Property name="contentAreaFilled" type="boolean" value="false"/>
+              </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnMenuPesquisarMouseClicked"/>
+              </Events>
+            </Component>
           </SubComponents>
         </Container>
       </SubComponents>

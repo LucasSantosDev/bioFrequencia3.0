@@ -326,6 +326,11 @@ public class Login extends javax.swing.JFrame {
         if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
             logar();
         }
+        else if(evt.getKeyCode() != KeyEvent.VK_ENTER && evt.getKeyCode() != KeyEvent.VK_BACK_SPACE) {
+            if(txtCPF.getText().length() == 10) {
+                txtSenha.requestFocus();
+            }
+        }
     }
     public void logar() throws IOException {
         String cpf = txtCPF.getText();

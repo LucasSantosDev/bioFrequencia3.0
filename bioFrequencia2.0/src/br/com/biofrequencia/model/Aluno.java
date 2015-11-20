@@ -44,22 +44,6 @@ public class Aluno {
     }
     
     public Aluno(int id, String nome, String dtNasc, String RA, String telFixo, String telCelular, String CEP, String cidade, String endereco, String nmResponsavel1, String nmResponsavel2, String numChamada, int curso, int turma, boolean ativo, int sexo) {
-        this.sexo = 1;
-        this.ativo = false;
-        this.turma = 0;
-        this.curso = 0;
-        this.numChamada = "";
-        this.nmResponsavel2 = "";
-        this.nmResponsavel1 = "";
-        this.endereco = "";
-        this.cidade = "";
-        this.CEP = "";
-        this.telCelular = "";
-        this.telFixo = "";
-        this.RA = "";
-        this.dtNasc = "";
-        this.nome = "";
-        this.id = 0;
         this.id = id;
         this.nome = nome;
         this.dtNasc = dtNasc;
